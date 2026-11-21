@@ -1,0 +1,1154 @@
+<!doctype html>
+<html lang="en" data-ground="ivory" data-product="waking-matter">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Waking Matter · Direction D · The Instrument</title>
+<meta name="description" content="We build memory, provenance and evaluation infrastructure for agents working with changing information.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="shared/tokens.css">
+<style>
+/* ==========================================================================
+   Direction D · The Instrument
+   Read like a paper, behave like an instrument. One pinned figure (the plate)
+   morphs through one state per research question. Ivory only.
+   ========================================================================== */
+:root{
+  --fig-h:clamp(350px,42vh,440px);
+  --pin-pad:12px;
+  --pin-h:calc(var(--fig-h) + var(--pin-pad));
+  /* jump landing: just under the plate, kept above dir.js's 45% active-beat line */
+  --jump-m:calc(var(--pin-h) + clamp(6px, 3vh - 14px, 16px));
+  --seg-x:230px;
+  --seg-y:200px;
+}
+@media (max-width:719px){
+  :root{--fig-h:max(380px,48svh);--pin-pad:8px;--jump-m:calc(var(--pin-h) + 16px)}
+}
+
+/* ---- Header (static, ivory) ------------------------------------------------ */
+.site-header .logo{min-height:2.75rem}
+@media (max-width:719px){
+  .site-header{flex-wrap:wrap;gap:.25rem 1rem;padding-block:.6rem}
+  .site-header .nav{gap:0 1.1rem;justify-content:flex-start}
+  .site-header .nav a{min-height:2.75rem}
+}
+
+/* ---- Hero ---------------------------------------------------------------- */
+.hero{padding:clamp(2.25rem,4.5vw,3.75rem) 0 clamp(1.5rem,2.5vw,2rem)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:1.75rem clamp(2rem,5vw,4.5rem);align-items:end}
+.hero .label{margin-bottom:1.1rem;color:var(--charcoal)}
+.hero .hero-deck{margin-top:0}
+.hero .hero-cta{margin-top:1.5rem}
+.hero-h1{animation:rise var(--dur-rise) var(--ease) both}
+@media (max-width:860px){.hero-grid{grid-template-columns:minmax(0,1fr)}}
+
+/* ---- The instrument: pinned plate over scrolling chapters ---------------- */
+.instrument{position:relative}
+.plate-pin{position:sticky;top:0;z-index:20;background:var(--ivory);padding-top:var(--pin-pad)}
+.plate{margin:0;height:var(--fig-h);display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto;
+  border:1px solid var(--hair-strong);background:var(--ivory);color:var(--void)}
+.plate--static{height:var(--fig-h)}
+.plate-strip{min-width:0;display:flex;align-items:stretch;justify-content:space-between;gap:1rem;border-bottom:1px solid var(--hair);min-height:40px;padding-left:14px}
+.plate-fig{align-self:center;margin:0;font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:1000px){.plate-fig{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.25;padding-right:.5rem}}
+.plate-fig .fig-sub{color:var(--void-72);font-weight:400}
+.plate-strip .illus-r{align-self:center;padding-right:14px;font-family:var(--font-mono);font-size:10.5px;color:var(--void-72);white-space:nowrap}
+.chips{display:flex;align-items:stretch;flex:none}
+.chip{appearance:none;-webkit-appearance:none;margin:0;background:none;border:0;border-left:1px solid var(--hair);border-radius:0;color:var(--void-72);
+  font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:.03em;line-height:1;padding:0 14px;min-height:40px;
+  position:relative;cursor:pointer;white-space:nowrap;transition:color .25s var(--ease)}
+.chip .chip-n{color:var(--void-72);margin-right:.45em;transition:color .25s var(--ease)}
+.chip:hover{color:var(--void)}
+.chip[aria-current="true"]{color:var(--void)}
+.chip[aria-current="true"] .chip-n{color:var(--void-72)}
+.chip:focus-visible{outline-offset:-3px}
+.chip-prog{position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--void);transform-origin:0 50%;transform:scaleX(0);will-change:transform}
+.plate-body{position:relative;min-height:0}
+.plate-svg{position:absolute;inset:0;width:100%;height:100%;overflow:hidden}
+.plate-cap{border-top:1px solid var(--hair);padding:9px 14px 11px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.25rem 1.5rem;align-items:start}
+.cap-meta{font-family:var(--font-mono);font-size:10.5px;line-height:1.5;color:var(--void-72);white-space:nowrap;padding-top:.2rem}
+.cap-meta .cap-fig{display:none;color:var(--void);font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+.cap-stack{display:grid;min-width:0}
+.cap{grid-area:1/1;margin:0;font-family:var(--font-serif);font-size:1.02rem;line-height:1.32;letter-spacing:-.005em;color:var(--void);opacity:0;font-optical-sizing:auto}
+.cap.is-on{opacity:1}
+.cap .q-essay{display:block;margin-top:.25rem;font-family:var(--font-sans);font-size:.78rem;line-height:1.45;color:var(--charcoal)}
+.cap .q-essay em{font-style:normal;color:var(--void-72);font-family:var(--font-mono);font-size:10.5px;margin-left:.4em}
+.plate--static .cap{opacity:1}
+.cap-key{display:none}
+
+/* segmented control (inside the plate, Evaluation state) */
+.seg-wrap{position:absolute;left:var(--seg-x);top:var(--seg-y);display:flex;align-items:center;gap:14px;opacity:0;visibility:hidden}
+.seg{display:flex;flex:none;border:1px solid var(--hair-strong)}
+.seg-btn{appearance:none;-webkit-appearance:none;margin:0;border:0;border-left:1px solid var(--hair);border-radius:0;background:var(--ivory);color:var(--void-72);
+  font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:.03em;min-height:32px;padding:0 14px;cursor:pointer;white-space:nowrap;
+  transition:background-color .25s var(--ease),color .25s var(--ease)}
+.seg-btn:first-child{border-left:0}
+.seg-btn:hover{color:var(--void);background:var(--paper-tint)}
+.seg-btn[aria-checked="true"]{background:var(--void);color:var(--ivory)}
+.seg-btn:focus-visible{outline-offset:2px}
+.seg-note{font-family:var(--font-mono);font-size:10.5px;line-height:1.35;color:var(--void-72);min-width:0}
+
+/* SVG figure typography: every mark encodes the scenario */
+.plate-svg text{font-family:var(--font-mono);font-size:10.5px;fill:var(--void)}
+.plate-svg .pt-axis{fill:var(--void-72);font-size:10.5px}
+.plate-svg .pt-axis2{fill:var(--void-72);font-size:10px}
+.plate-svg .pt-name{font-size:11px}
+.plate-svg .pt-dim{fill:var(--void-72)}
+.plate-svg .pt-kind{font-family:var(--font-sans);font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;fill:var(--void-72)}
+.plate-svg .pt-band{font-family:var(--font-sans);font-size:10px;font-weight:500;letter-spacing:.13em;text-transform:uppercase;fill:var(--void)}
+.plate-svg .pt-tag{font-size:10px;fill:var(--charcoal)}
+.plate-svg .pt-note{font-size:10.5px;fill:var(--void-72)}
+.plate-svg .pt-res{font-size:11px;fill:var(--resonance-ink);font-weight:500}
+.plate-svg .pt-nid{font-size:12px;font-weight:500}
+.plate-svg .pt-quote{font-family:var(--font-serif);font-size:12.5px;fill:var(--charcoal)}
+.plate-svg .halo{paint-order:stroke;stroke:var(--ivory);stroke-width:4px;stroke-linejoin:round}
+.plate-svg .gl{fill:none;stroke:var(--void);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.plate-svg .gl.g-res{stroke:var(--resonance)}
+.plate-svg .pl-grid{stroke:var(--hair);stroke-width:1}
+.plate-svg .pl-chg{stroke:var(--void);stroke-width:1.2;stroke-dasharray:4 3}
+.plate-svg .pl-exp{stroke:var(--void-72);stroke-width:1;stroke-dasharray:2 2}
+.plate-svg .pl-link{stroke:var(--void-56);stroke-width:1;stroke-dasharray:2 3}
+.plate-svg .bar-solid{fill:var(--void)}
+.plate-svg .bar-hatch{stroke:var(--void);stroke-width:1}
+.plate-svg .pile{stroke:var(--void-32);stroke-width:1}
+.plate-svg .frame{fill:var(--ivory);stroke:var(--void);stroke-width:1}
+.plate-svg .cap-mk{fill:none;stroke:var(--void);stroke-width:1.4}
+.plate-svg .bead{fill:var(--resonance);stroke:var(--ivory);stroke-width:2}
+.plate-svg .arr{fill:none;stroke:var(--void);stroke-width:1.2}
+.plate-svg .arr.res{stroke:var(--resonance);stroke-width:1.6}
+.plate-svg .arr-halo{fill:none;stroke:var(--ivory);stroke-width:5}
+.plate-svg .arr-head{fill:none;stroke:var(--void);stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+.plate-svg .arr-head.res{stroke:var(--resonance);stroke-width:1.6}
+
+/* ---- Chapters ------------------------------------------------------------- */
+.chapter{padding:clamp(2.25rem,4.5vw,3.5rem) 0 clamp(2rem,4vw,3rem);scroll-margin-top:var(--jump-m);
+  min-height:calc((100svh - var(--pin-h)) * .94)}
+.chapter + .chapter{border-top:1px solid var(--hair)}
+.chapter--first{min-height:calc((100svh - var(--pin-h)) * 1.06)}
+.chapter--last{min-height:calc((100svh - var(--pin-h)) * .9);padding-bottom:clamp(3rem,6vw,5rem)}
+.margin-col{display:flex;flex-direction:column;gap:.55rem;padding-top:.45rem}
+.margin-col .label{color:var(--charcoal)}
+.counter{margin:0;color:var(--void)}
+.counter .of{color:var(--void-72)}
+.investigating{color:var(--void-72) !important;margin-bottom:.9rem}
+.section-copy .text-link{color:var(--void)}
+.split{grid-template-columns:minmax(8rem,14rem) minmax(0,var(--measure))}
+@media (max-width:719px){
+  .split{grid-template-columns:minmax(0,1fr);gap:.9rem}
+  .margin-col{flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:.25rem 1rem;padding-top:0}
+  .investigating{flex-basis:100%;margin-bottom:0}
+  .chapter{min-height:calc((100svh - var(--pin-h)) * 1.2)}
+  .section-copy h2{font-size:1.85rem}
+}
+
+/* ---- Normal flow after the instrument ------------------------------------ */
+.after .band{border-top:1px solid var(--hair)}
+.thesis .meta{margin-top:1.25rem;color:var(--void-72)}
+.closing{margin-top:clamp(2.5rem,6vw,4.5rem)}
+.text-link,.work-links a{color:var(--void)}
+
+/* ---- Footer (ivory) ------------------------------------------------------- */
+.site-footer{align-items:center}
+.site-footer a{display:inline-flex;align-items:center;min-height:2rem}
+.foot-links{display:flex;flex-wrap:wrap;align-items:center;gap:.25rem 1.5rem}
+.backed{gap:.55rem}
+.backed img{width:56px;height:auto}
+@media (max-width:719px){.site-footer a{min-height:2.75rem}}
+
+/* ---- Mobile plate composition -------------------------------------------- */
+@media (max-width:719px){
+  .plate-strip{padding-left:0;min-height:44px}
+  .plate-fig,.plate-strip .illus-r{display:none}
+  .chips{flex:1 1 auto;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{min-height:44px;flex:none;padding:0 13px}
+  .chip:first-child{border-left:0}
+  .plate-cap{grid-template-columns:minmax(0,1fr);padding:6px 12px 8px;gap:.15rem}
+  .cap-meta{padding-top:0}
+  .cap-meta .cap-fig{display:inline}
+  .cap{font-size:.82rem;line-height:1.25}
+  .cap .q-essay{display:none}
+  .cap-key{display:grid;margin:0;font-family:var(--font-mono);font-size:10.5px;line-height:1.45;color:var(--charcoal)}
+  .cap-key > span{grid-area:1/1;visibility:hidden}
+  .cap-key[data-k="legend"] .k-legend,.cap-key[data-k="tags"] .k-tags{visibility:visible}
+  .cap-key svg{display:inline-block;vertical-align:baseline;width:9px;height:9px;margin:0 .4em -1px 0;fill:none;stroke:var(--void);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+  .cap-key .k-sep{margin:0 .6em;color:var(--void-72)}
+  .seg-wrap{left:12px;right:12px}
+  .seg{flex:1}
+  .seg-btn{flex:1;min-height:44px;padding:0 6px}
+  .seg-note{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+}
+@media (max-width:719px){
+  .plate--static .plate-fig{display:block;padding-left:12px}
+  .plate--static .cap-meta .cap-fig{display:none}
+  .site-footer p:first-child a{display:inline-block;min-height:0;padding-block:.75rem;margin-block:-.75rem}
+}
+@media (pointer:coarse){.chip,.seg-btn{min-height:44px}}
+
+/* ---- Reduced motion -------------------------------------------------------- */
+html[data-reduced="true"] .hero-h1{animation:none}
+html[data-reduced="true"] .chip,html[data-reduced="true"] .chip .chip-n,html[data-reduced="true"] .seg-btn{transition:none}
+@media (prefers-reduced-motion:reduce){
+  .hero-h1{animation:none}
+  .chip,.chip .chip-n,.seg-btn{transition:none}
+}
+</style>
+<noscript><style>
+  /* No JS: the plate is a static caption list; every word is still on the page. */
+  .plate-pin{position:static}
+  .plate{height:auto}
+  .plate-body,.chips,.seg-wrap{display:none}
+  .cap-stack{gap:.4rem}
+  .cap{grid-area:auto;opacity:1}
+</style></noscript>
+</head>
+<body>
+<div class="dir-head" data-component="DirectionHead">
+  <span class="dir-eyebrow">Concept direction D</span>
+  <span>The Instrument</span>
+  <span>Read like a paper, behave like an instrument: one pinned figure morphs through the four research questions.</span>
+  <a href="index.html" data-test-id="dir-back" data-component="Link" data-applicable-states="rest hover focus-visible">← all directions</a>
+</div>
+<a class="skip-link" href="#main" data-test-id="skip-link" data-component="Link" data-applicable-states="rest focus-visible">Skip to content</a>
+
+<header class="site-header site-header--ivory" data-component="Header">
+  <a class="logo" href="https://wakingmatter.com/" aria-label="Waking Matter home" data-test-id="header-logo" data-component="Link" data-applicable-states="rest hover focus-visible">
+    <img src="shared/assets/lockup-on-ivory.svg" alt="Waking Matter" width="228" height="32">
+  </a>
+  <nav class="nav" aria-label="Primary" data-component="Nav">
+    <a href="https://wakingmatter.com/about/" data-test-id="nav-about" data-applicable-states="rest hover focus-visible">About</a>
+    <a href="https://wakingmatter.com/research/" data-test-id="nav-research" data-applicable-states="rest hover focus-visible">Research</a>
+    <a href="https://wakingmatter.com/notes/" data-test-id="nav-notes" data-applicable-states="rest hover focus-visible">Notes</a>
+    <a href="mailto:hello@wakingmatter.com" data-test-id="nav-contact" data-applicable-states="rest hover focus-visible">Contact</a>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="hero" data-beat="hero" data-beat-label="Hero · baseline" data-component="Hero" aria-labelledby="hero-h1">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="label">Building systems for cumulative intelligence</p>
+        <h1 class="hero-h1" id="hero-h1" data-motion-purpose="brand-expression">Agents should improve with experience.</h1>
+      </div>
+      <div>
+        <p class="hero-deck hero-deck--ink">We build memory, provenance and evaluation infrastructure for agents working with changing information.</p>
+        <a class="hero-cta hero-cta--ink" href="#problem" data-test-id="hero-cta" data-component="Link" data-applicable-states="rest hover focus-visible">Explore the work ↓</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="instrument wrap" data-component="Instrument">
+    <div class="plate-pin" data-component="PlatePin">
+      <figure class="plate" id="plate" data-component="Plate" data-motion-purpose="continuity" aria-labelledby="plate-fig">
+        <div class="plate-strip">
+          <p class="plate-fig" id="plate-fig"><span data-fig-n>FIG. 1</span> <span class="fig-sub">· <span data-fig-t>Baseline</span></span></p>
+          <nav class="chips" aria-label="Research questions" data-component="ChapterIndex" data-applicable-states="rest hover focus-visible current">
+            <button type="button" class="chip" data-target="decisions" data-test-id="chip-decisions" data-applicable-states="rest hover focus-visible current"><span class="chip-n">01</span>Decisions<span class="chip-prog" aria-hidden="true" data-motion-purpose="guidance"></span></button>
+            <button type="button" class="chip" data-target="state" data-test-id="chip-state" data-applicable-states="rest hover focus-visible current" tabindex="-1"><span class="chip-n">02</span>Useful state<span class="chip-prog" aria-hidden="true" data-motion-purpose="guidance"></span></button>
+            <button type="button" class="chip" data-target="revision" data-test-id="chip-revision" data-applicable-states="rest hover focus-visible current" tabindex="-1"><span class="chip-n">03</span>Revision<span class="chip-prog" aria-hidden="true" data-motion-purpose="guidance"></span></button>
+            <button type="button" class="chip" data-target="evaluation" data-test-id="chip-evaluation" data-applicable-states="rest hover focus-visible current" tabindex="-1"><span class="chip-n">04</span>Evaluation<span class="chip-prog" aria-hidden="true" data-motion-purpose="guidance"></span></button>
+          </nav>
+        </div>
+        <div class="plate-body" data-motion-purpose="guidance">
+          <svg class="plate-svg" aria-hidden="true" focusable="false"></svg>
+          <div class="seg-wrap" data-component="OutcomeSwitch" data-motion-purpose="feedback">
+            <div class="seg" role="radiogroup" aria-label="Illustrative outcome with experience" data-applicable-states="rest hover focus-visible checked">
+              <button type="button" class="seg-btn" role="radio" aria-checked="false" tabindex="-1" data-v="help" data-test-id="eval-helps" data-applicable-states="rest hover focus-visible checked">Helps</button>
+              <button type="button" class="seg-btn" role="radio" aria-checked="true" tabindex="0" data-v="none" data-test-id="eval-no-effect" data-applicable-states="rest hover focus-visible checked">No effect</button>
+              <button type="button" class="seg-btn" role="radio" aria-checked="false" tabindex="-1" data-v="hurt" data-test-id="eval-hurts" data-applicable-states="rest hover focus-visible checked">Hurts</button>
+            </div>
+            <span class="seg-note" aria-live="polite">With experience: the same as more context / compute.</span>
+          </div>
+          <div class="sr-only">
+            <p>Figure, illustrative scenario, not a result: eight weekly runs of a supplier report, Run 1 (wk 12) to Run 8 (wk 19). Rows: sources price-list.pdf and supplier-portal; procedure freshness check; failed attempt used price-list.pdf; fact portal is current from 14 Mar; and the outcome of each run.</p>
+            <ul>
+              <li>Baseline: no carry-over. Every run re-reads both sources and ends in the same repeated mistake. Keeping more history adds stored records but no decisions.</li>
+              <li>Decisions: after Run 1 fails, the next action in Run 2 is to check the source date first; later runs are checked.</li>
+              <li>Useful state: the fact and the freshness check persist to Run 8; the failed attempt ends at Run 3. Tags: source price-list.pdf, scope this report only, revisit if portal format changes.</li>
+              <li>Revision: the source changes at Run 6 (wk 17). Inherited state crossing that line loses authority; the freshness check is revised from Run 7; the fact is reset; the local-only failed attempt stops before the line.</li>
+              <li>Evaluation: three bands, fresh start, more context or compute, and with experience. The with experience band can show helps, no effect or hurts.</li>
+              <li>Agent Memory Contracts: the freshness check opens into its record, price-list.pdf to candidate cand_7f3a to decision dec_2b91 (accepted by an ops reviewer) to trusted fact fact_c40e, with evidence price-list.pdf, p.3, published 3 Mar.</li>
+            </ul>
+          </div>
+        </div>
+        <figcaption class="plate-cap">
+          <div class="cap-stack">
+            <p class="cap is-on" data-cap="0">Eight weekly runs, no carry-over: every run re-reads both sources and repeats the same mistake.</p>
+            <p class="cap" data-cap="1">Stored history, no decisions: more of the past is kept, and the same mistake repeats.</p>
+            <p class="cap" data-cap="2">When should a previous outcome change the next search, test or action?</p>
+            <p class="cap" data-cap="3">Which facts, procedures and failed attempts deserve to persist, and with what source and scope?</p>
+            <p class="cap" data-cap="4">How should a system detect stale knowledge and decide what to revise or reset?</p>
+            <p class="cap" data-cap="5">Does retained experience improve results when context, compute and prior advice are accounted for?<span class="q-essay">“A test that cannot reveal the latter two cannot tell us what deserves to be retained.”<em>from the essay</em></span></p>
+            <p class="cap" data-cap="6">Zoom into any retained thing and you find a record with a source.</p>
+          </div>
+          <p class="cap-key" data-k="legend" aria-hidden="true"><span class="k-legend"><svg viewBox="-5 -5 10 10"><path d="M-4 -4L4 4M-4 4L4 -4"/></svg>repeated mistake<span class="k-sep">·</span><svg viewBox="-5 -5 10 10"><path d="M-4 0.1L-1.3 2.9L4 -3.3"/></svg>checked</span><span class="k-tags">source: price-list.pdf · scope: this report only · revisit if portal format changes</span></p>
+          <p class="cap-meta"><span class="cap-fig" data-fig-m>FIG. 1</span><span class="cap-fig"> · </span>Illustrative scenario, not a result</p>
+        </figcaption>
+      </figure>
+    </div>
+
+    <section class="chapter chapter--first" id="problem" data-beat="problem" data-beat-label="The problem · history pile" data-component="Section" aria-labelledby="h-problem">
+      <div class="split">
+        <div class="margin-col"><p class="label">The problem</p></div>
+        <div class="section-copy">
+          <h2 id="h-problem">Memory is not enough.</h2>
+          <p>A stored answer can be outdated. A successful procedure can fail when the task changes. Keeping more history does not tell an agent what to trust or do next.</p>
+          <p>The challenge is to connect retained experience to decisions, and to notice when the past has become a liability.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" id="decisions" data-beat="decisions" data-beat-label="01 Decisions" data-component="Section" aria-labelledby="h-decisions">
+      <div class="split">
+        <div class="margin-col">
+          <p class="label investigating">What we are investigating</p>
+          <p class="counter meta">01 <span class="of">/ 04</span></p>
+          <p class="label">Decisions</p>
+        </div>
+        <div class="section-copy">
+          <h2 id="h-decisions">What should the agent do differently?</h2>
+          <p>A previous failure could justify checking an assumption, searching another source or asking a person. How should the system choose that response, allocate its attention and compute, and make the resulting decision inspectable?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" id="state" data-beat="state" data-beat-label="02 Useful state" data-component="Section" aria-labelledby="h-state">
+      <div class="split">
+        <div class="margin-col">
+          <p class="counter meta">02 <span class="of">/ 04</span></p>
+          <p class="label">Useful state</p>
+        </div>
+        <div class="section-copy">
+          <h2 id="h-state">What deserves to persist?</h2>
+          <p>Facts, procedures and failed attempts have different useful lives. What representation, scope and expiry should each have? The record should preserve where a claim came from and what would invalidate it.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" id="revision" data-beat="revision" data-beat-label="03 Revision" data-component="Section" aria-labelledby="h-revision">
+      <div class="split">
+        <div class="margin-col">
+          <p class="counter meta">03 <span class="of">/ 04</span></p>
+          <p class="label">Revision</p>
+        </div>
+        <div class="section-copy">
+          <h2 id="h-revision">When should the past lose authority?</h2>
+          <p>A rule that helped yesterday can mislead today. How should a system detect changed conditions, revise inherited state or reset? What knowledge should remain local because of privacy or context?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" id="evaluation" data-beat="evaluation" data-beat-label="04 Evaluation" data-component="Section" aria-labelledby="h-evaluation">
+      <div class="split">
+        <div class="margin-col">
+          <p class="counter meta">04 <span class="of">/ 04</span></p>
+          <p class="label">Evaluation</p>
+        </div>
+        <div class="section-copy">
+          <h2 id="h-evaluation">Did experience actually help?</h2>
+          <p>Compare against a fresh start, additional context or compute, and advice available before the experience. Measure outcomes, repeated errors, cost and escalation as conditions change. A useful experiment must distinguish help, no effect and harm.</p>
+          <a class="text-link" href="https://wakingmatter.com/research/" data-test-id="link-research" data-component="Link" data-applicable-states="rest hover focus-visible">Explore the research questions →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter chapter--last" id="contract" data-beat="contract" data-beat-label="Agent Memory Contracts · the record" data-component="Section" aria-labelledby="h-contract">
+      <div class="split">
+        <div class="margin-col"><p class="label">Public technical work</p></div>
+        <div class="section-copy">
+          <h2 id="h-contract">Agent Memory Contracts</h2>
+          <p>An agent’s interpretation should not silently become a fact. Agent Memory Contracts is a public Python library for making that boundary explicit.</p>
+          <p>Source evidence stays linked to a candidate claim. Accepting the claim requires a recorded decision, and the validator rejects a trusted record without the required authorization. The worked reducer example shows acceptance, rejection and an invalid promotion.</p>
+          <div class="work-links">
+            <a class="text-link" href="https://github.com/avs-io/agent-memory-contracts" rel="noopener" data-test-id="link-code" data-component="Link" data-applicable-states="rest hover focus-visible">Inspect the code and tests ↗</a>
+            <a class="text-link" href="https://github.com/avs-io/agent-memory-contracts/blob/main/examples/reference_reducer.py" rel="noopener" data-test-id="link-example" data-component="Link" data-applicable-states="rest hover focus-visible">Run the worked example ↗</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="after">
+    <section class="band" id="repeated" data-beat="repeated" data-beat-label="Repeated work" data-component="Section" aria-labelledby="h-repeated">
+      <div class="wrap split">
+        <div class="margin-col"><p class="label">Repeated work</p></div>
+        <div class="section-copy">
+          <h2 id="h-repeated">Bring a problem that keeps coming back.</h2>
+          <p>Does an agent reconstruct the same context every week, repeat a known mistake or fail when a fact changes? We want to work on recurring workflows where the result can be checked and a person can intervene.</p>
+          <a class="text-link" href="mailto:hello@wakingmatter.com" data-test-id="link-workflow" data-component="Link" data-applicable-states="rest hover focus-visible">Tell us about your workflow</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="band thesis" id="thesis" data-beat="thesis" data-beat-label="Thesis · accumulated" data-component="Section" aria-labelledby="h-thesis">
+      <div class="wrap">
+        <div class="split">
+          <div class="margin-col"><p class="label">The broader thesis</p></div>
+          <div class="section-copy">
+            <h2 id="h-thesis">Intelligence should accumulate.</h2>
+            <p>Learning costs time, attention and failed attempts. The essay asks what should survive that investment, how it can pass between systems and when it should lose authority.</p>
+            <p class="meta">2026-09-15 · Updated 2026-10-16</p>
+            <a class="text-link" href="https://wakingmatter.com/notes/intelligence-should-accumulate/" data-test-id="link-essay" data-component="Link" data-applicable-states="rest hover focus-visible">Read the essay →</a>
+          </div>
+        </div>
+        <figure class="plate plate--static closing" id="plate-closing" data-component="Plate" aria-labelledby="closing-fig">
+          <div class="plate-strip">
+            <p class="plate-fig" id="closing-fig">FIG. 7 <span class="fig-sub">· Accumulated</span></p>
+          </div>
+          <div class="plate-body">
+            <svg class="plate-svg" aria-hidden="true" focusable="false"></svg>
+            <p class="sr-only">Figure, illustrative scenario, not a result: all eight runs together. The freshness check and the fact persist; after the source changed at Run 6 their inherited parts are hatched; the freshness check is revised from Run 7, the fact is reset, and the older failed attempt is hatched and kept local. The one change in a later decision, from Run 1 to Run 2, is marked.</p>
+          </div>
+          <figcaption class="plate-cap">
+            <div class="cap-stack"><p class="cap">“The ability to preserve information needs a corresponding ability to limit its authority.”<span class="q-essay">from the essay</span></p></div>
+            <p class="cap-key" data-k="legend" aria-hidden="true"><span class="k-legend"><svg viewBox="-5 -5 10 10"><path d="M-4 -4L4 4M-4 4L4 -4"/></svg>repeated mistake<span class="k-sep">·</span><svg viewBox="-5 -5 10 10"><path d="M-4 0.1L-1.3 2.9L4 -3.3"/></svg>checked</span></p>
+            <p class="cap-meta"><span class="cap-fig">FIG. 7</span><span class="cap-fig"> · </span>Illustrative scenario, not a result</p>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer" data-component="Footer">
+  <p><a href="https://wakingmatter.com/" data-test-id="footer-home" data-applicable-states="rest hover focus-visible">wakingmatter.com</a> · Building systems for cumulative intelligence.</p>
+  <p class="foot-links">
+    <a href="https://avsingh.com/writing/the-million-tendril-problem/" rel="noopener" data-test-id="footer-founder" data-applicable-states="rest hover focus-visible">From the founder</a>
+    <a href="mailto:hello@wakingmatter.com" data-test-id="footer-email" data-applicable-states="rest hover focus-visible">hello@wakingmatter.com</a>
+    <a href="https://www.linkedin.com/company/wakingmatter/" target="_blank" rel="noopener" data-test-id="footer-linkedin" data-applicable-states="rest hover focus-visible">LinkedIn<span class="sr-only"> (opens in a new tab)</span></a>
+    <a class="backed" href="https://e2b.dev" rel="noopener" data-test-id="footer-e2b" data-applicable-states="rest hover focus-visible">Backed by <img src="shared/assets/e2b.svg" alt="E2B" width="67" height="30"> for Startups</a>
+  </p>
+</footer>
+
+<footer data-brainstorm-meta>
+  <span data-direction-label>D</span> <span data-direction-name>The Instrument</span> <span data-fluent-components>none (marketing site)</span> <a href="index.html" data-test-id="meta-back">back to the directions</a>
+</footer>
+
+<script src="shared/dir.js"></script>
+<script>
+(function () {
+  'use strict';
+  var WM = window.WM, root = document.documentElement;
+  var NS = 'http://www.w3.org/2000/svg';
+  var clamp = WM.clamp;
+
+  /* ---- Glyph shapes: two line segments, endpoints relative to radius r.
+     A tick (a read) is two coincident vertical segments, so ticks, crosses and
+     checks interpolate into one another by moving endpoints. ------------------ */
+  var SH = {
+    tick: [0, -1, 0, 1, 0, -1, 0, 1],
+    cross: [-1, -1, 1, 1, -1, 1, 1, -1],
+    check: [-1, 0.02, -0.32, 0.72, -0.32, 0.72, 1, -0.82]
+  };
+  var X = 'cross', C = 'check';
+  var PAT = {
+    fresh: [X, C, X, X, C, X, C, C],
+    more:  [X, C, C, X, C, X, C, C],
+    help:  [X, C, C, C, C, C, C, C],
+    none:  [X, C, C, X, C, X, C, C],
+    hurt:  [X, C, C, X, C, X, X, X]
+  };
+  var NOTE = {
+    help: 'With experience: fewer repeated mistakes than either baseline.',
+    none: 'With experience: the same as more context / compute.',
+    hurt: 'With experience: more repeated mistakes after the source changed.'
+  };
+  var FIGS = [
+    ['FIG. 1', 'Baseline'], ['FIG. 1', 'Stored history'], ['FIG. 2', 'Decisions'], ['FIG. 3', 'Useful state'],
+    ['FIG. 4', 'Revision'], ['FIG. 5', 'Evaluation'], ['FIG. 6', 'Agent Memory Contracts']
+  ];
+  var ROWS = [
+    ['price-list.pdf', 'source'], ['supplier-portal', 'source'], ['freshness check', 'procedure'],
+    ['used price-list.pdf', 'failed attempt'], ['portal is current from 14 Mar', 'fact'], ['outcome', 'outcome']
+  ];
+  var CW = 0.6; // IBM Plex Mono advance, em
+
+  function shape(n) { return SH[n].slice(); }
+  function copy(m) {
+    var o = {}, k, e, f;
+    for (k in m) { e = m[k]; f = {}; for (var p in e) f[p] = Array.isArray(e[p]) ? e[p].slice() : e[p]; o[k] = f; }
+    return o;
+  }
+
+  /* ---- Layout: pixel geometry of the plate body ---------------------------- */
+  function layout(W, H) {
+    var m = W < 560 || window.matchMedia('(max-width:719px)').matches, L = { W: W, H: H, m: m };   // same breakpoint as the CSS that moves the outcome switch
+    if (!m) {
+      L.lx = 14; L.LW = W > 900 ? 222 : 206; L.x0 = L.LW; L.x1 = W - 18;
+      L.axY1 = 16; L.axY2 = 29; L.top = 38; L.bottom = H - 6;
+    } else {
+      L.lx = 12; L.LW = 0; L.x0 = 12; L.x1 = W - 12;
+      L.axY1 = 13; L.axY2 = 25; L.top = 31; L.bottom = H - 4;
+    }
+    L.colW = (L.x1 - L.x0) / 8;
+    L.rowH = (L.bottom - L.top) / 6;
+    L.cx = function (i) { return L.x0 + L.colW * (i + 0.5); };
+    L.edge = function (i) { return L.x0 + L.colW * i; };
+    if (!m) {
+      L.lane = function (r) { return L.top + L.rowH * (r + 0.5) + 3; };
+      L.lab = function (r) { return L.lane(r) + 4; };
+    } else {
+      L.lane = function (r) { return L.top + L.rowH * r + L.rowH * 0.7; };
+      L.lab = function (r) { return L.top + L.rowH * r + 9.5; };
+    }
+    L.bh = m ? 7 : clamp(L.rowH * 0.24, 8, 11);
+    L.gr = m ? clamp(L.colW * 0.13, 4, 5.5) : clamp(Math.min(L.rowH * 0.17, L.colW * 0.1), 5, 7.5);
+    L.bp = clamp(L.colW * 0.06, 2, 6);
+    return L;
+  }
+
+  /* ---- Element constructors ----------------------------------------------- */
+  function T(txt, cls, x, y, o, a, extra) {
+    var e = { t: 'text', txt: txt, cls: cls, x: x, y: y, o: o == null ? 1 : o, a: a || 'start' };
+    if (extra) for (var k in extra) e[k] = extra[k];
+    return e;
+  }
+  function G(x, y, r, s, o, cls, run) { return { t: 'glyph', cx: x, cy: y, r: r, s: shape(s), o: o == null ? 1 : o, cls: cls || 'gl', run: run }; }
+  function R(x, w, y, h, o, hz) { return { t: 'rect', x: x, w: Math.max(0, w), y: y, h: h, o: o, hz: hz || 0 }; }
+  function V(x, y1, y2, o, cls) { return { t: 'vline', x: x, y1: y1, y2: y2, o: o, cls: cls }; }
+  function tw(txt, fs) { return txt.length * fs * CW; }
+
+  /* ---- States (keyframes). 0 baseline, 1 pile, 2 decisions, 3 state,
+     4 revision, 5 evaluation, 6 contract; 7 = closing (static). ------------- */
+  function build(L, evalShapes) {
+    var D = !L.m, cx = L.cx, ex = L.edge, lane = L.lane, lab = L.lab, bh = L.bh, gr = L.gr, bp = L.bp;
+    var s0 = {}, i, r, k;
+
+    // axis + run grid
+    for (i = 0; i < 8; i++) {
+      s0['ax' + i] = T('Run ' + (i + 1), 'pt-axis', cx(i), L.axY1, 1, 'middle', L.colW < 41 ? { fs: 10 } : null);
+      s0['wk' + i] = T('wk ' + (12 + i), 'pt-axis2', cx(i), L.axY2, 1, 'middle');
+    }
+    for (i = 0; i <= 8; i++) s0['gl' + i] = V(ex(i), L.top - 4, L.bottom, i === 0 && !D ? 0 : 1, 'pl-grid');
+
+    // row labels
+    for (r = 0; r < 5; r++) {
+      var dim = r >= 2 ? 0.62 : 1, dimK = r >= 2 ? 0.86 : 1;
+      if (D) {
+        s0['rk' + r] = T(ROWS[r][1], 'pt-kind', L.lx, lane(r) - 9, dimK);
+        s0['rn' + r] = T(ROWS[r][0], 'pt-name', L.lx, lane(r) + 4, dim);
+      } else {
+        s0['rn' + r] = T(ROWS[r][0], 'pt-name halo', L.lx, lab(r), dim, 'start', { fs: 11 });
+      }
+    }
+    // outcome legend (cross = repeated mistake, check = checked)
+    var lfs = 10, lgW = 10 + 5 + tw('repeated mistake', lfs) + 12 + 10 + 5 + tw('checked', lfs);
+    var lgx, lgy;
+    if (D) {
+      s0.rk5 = T('outcome', 'pt-kind', L.lx, lane(5) - 9);
+      lgx = L.lx; lgy = lane(5) + 3;
+    } else {
+      s0.rn5 = T('outcome', 'pt-name halo', L.lx, lab(5), 1, 'start', { fs: 11 });
+    }
+    function legend(m, x, y, o) {
+      m.lgX = G(x + 4, y, 3.6, 'cross', o);
+      m.lgXt = T('repeated mistake', 'pt-tag', x + 13, y + 3.5, o);
+      var x2 = x + 13 + tw('repeated mistake', lfs) + 12;
+      m.lgC = G(x2 + 4, y, 3.6, 'check', o);
+      m.lgCt = T('checked', 'pt-tag', x2 + 13, y + 3.5, o);
+    }
+    // on narrow plates the legend lives in the caption (.cap-key)
+    if (D) legend(s0, lgx, lgy, 1);
+
+    // reads and outcomes: every run re-reads both sources, every run ends in the same cross
+    for (i = 0; i < 8; i++) {
+      s0['rA' + i] = G(cx(i), lane(0), bh * 0.8, 'tick', 1, 'gl', i);
+      s0['rB' + i] = G(cx(i), lane(1), bh * 0.8, 'tick', 1, 'gl', i);
+      s0['out' + i] = G(cx(i), lane(5), gr, 'cross', 1, 'gl', i);
+    }
+    s0.noCarry = T('no carry-over', 'pt-note', (L.x0 + L.x1) / 2, lane(3) + 4, 1, 'middle');
+
+    // history pile: collapsed in the baseline
+    var pileBot = lane(4) + bh, pileMax = pileBot - (lane(2) - L.rowH * 0.35);
+    for (i = 0; i < 8; i++) s0['pile' + i] = { t: 'pile', x: ex(i) + L.colW * 0.2, w: L.colW * 0.6, y: pileBot, h: 0, o: 0, run: i };
+    var pileLabX = D ? L.x0 + 6 : L.x0, pileLabY = D ? lane(2) - L.rowH * 0.1 : lab(2);
+    s0.pileLab = T('stored history · no decisions', 'pt-note halo', pileLabX, pileLabY, 0);
+
+    // things that do not exist yet: start geometry so they grow from a meaningful origin
+    var outTop = lane(5) - gr - 3;
+    s0.act = { t: 'circle', cx: cx(1), cy: lane(2), r: 0, o: 0 };
+    var arrP = [cx(0) + gr * 0.6, outTop, cx(0) + gr * 0.6, lane(2) + (lane(5) - lane(2)) * 0.35, cx(0) + L.colW * 0.25, lane(2), cx(1) - (D ? 9 : 7), lane(2)];
+    s0.arr = { t: 'arrow', p: arrP.slice(), d: 0, o: 1, cls: 'res' };
+    s0.actLab = T('check source date first', 'pt-res halo', cx(1) + 10, lane(2) + 4, 0, 'start', { late: 1 });
+    var procY = lane(2) - bh / 2, factY = lane(4) - bh / 2, failY = lane(3) - bh / 2;
+    s0.bProcA = R(cx(1), 0, procY, bh, 1); s0.bProcB = R(cx(1), 0, procY, bh, 1); s0.bProcR = R(ex(6) + bp, 0, procY, bh, 1);
+    s0.bFactA = R(ex(1) + bp, 0, factY, bh, 1); s0.bFactB = R(ex(1) + bp, 0, factY, bh, 1);
+    s0.bFail = R(ex(0) + bp, 0, failY, bh, 1);
+
+    // ---- S1 pile: more history, still no connections
+    var s1 = copy(s0);
+    for (i = 0; i < 8; i++) { s1['pile' + i].h = pileMax * (i + 1) / 8; s1['pile' + i].y = pileBot - pileMax * (i + 1) / 8; s1['pile' + i].o = 1; }
+    s1.noCarry.o = 0; s1.pileLab.o = 1;
+    for (r = 2; r < 5; r++) { if (s1['rk' + r]) s1['rk' + r].o = 0.86; s1['rn' + r].o = D ? 0.62 : 0; }
+
+    // ---- S2 decisions: Run 1's outcome changes Run 2's next action
+    var s2 = copy(s0);
+    for (i = 0; i < 8; i++) { s2['pile' + i].y = lane(5) - gr; s2['pile' + i].o = 0; }
+    s2.noCarry.o = 0;
+    for (i = 1; i < 8; i++) { s2['rA' + i].o = 0.26; s2['out' + i].s = shape('check'); }
+    s2.act = { t: 'circle', cx: cx(1), cy: lane(2), r: D ? 5 : 4.2, o: 1 };
+    s2.arr.d = 1; s2.actLab.o = 1;
+    if (s2.rk2) s2.rk2.o = 1; s2.rn2.o = 1;
+
+    // ---- S3 useful state: bars of different lifetimes, with source, scope and expiry
+    var s3 = copy(s2);
+    if (D) { s3.actLab.y = procY - 5; s3.actLab.x = ex(1) + bp; } else s3.actLab.o = 0;
+    for (r = 2; r < 5; r++) { if (s3['rk' + r]) s3['rk' + r].o = 1; s3['rn' + r].o = 1; }
+    s3.bProcA = R(ex(1) + bp, ex(5) - ex(1) - bp + 1, procY, bh, 1);
+    s3.bProcB = R(ex(5), ex(8) - bp - ex(5), procY, bh, 1);
+    s3.bFactA = R(ex(1) + bp, ex(5) - ex(1) - bp + 1, factY, bh, 1);
+    s3.bFactB = R(ex(5), ex(8) - bp - ex(5), factY, bh, 1);
+    s3.bFail = R(ex(0) + bp, ex(3) - bp * 2 - ex(0), failY, bh, 1);
+    s3.act.r = D ? 6 : 5;
+    var tagY = function (y) { return y - 5; };
+    var sTop = true;
+    if (D) {
+      // tags share the row above the freshness check only where tw() says they fit (scope must also clear the Run 6
+      // change line); otherwise scope, then expiry, move under the bar; if both cannot share it, scope (in Fig 6) is left out
+      var tx = ex(1) + bp, tEnd = ex(8) - bp - 7, aEnd = tx + tw('check source date first', 11) + 14, lowY = procY + bh + 12;
+      var sW = tw('scope: this report only', 10), eW = tw('revisit if portal format changes', 10);
+      var eTop = aEnd + eW <= tEnd;
+      sTop = aEnd + sW + 14 + eW <= tEnd && aEnd + sW + 6 <= ex(5);
+      var sLow = !sTop && L.rowH >= bh + 18 && tx + sW + (eTop ? 0 : 14 + eW) <= tEnd;
+      s3.tProc = T('scope: this report only', 'pt-tag', sTop ? aEnd : tx, sTop ? tagY(procY) : lowY, sTop || sLow ? 1 : 0, 'start', { late: 1 });
+      s3.tFact = T('source: price-list.pdf', 'pt-tag', ex(1) + bp, tagY(factY), 1, 'start', { late: 1 });
+      s3.expLab = T('revisit if portal format changes', 'pt-tag', tEnd, eTop ? tagY(procY) : lowY, 1, 'end', { late: 1 });
+      s3.exp = eTop ? V(ex(8) - bp, procY - 13, procY + bh + 4, 1, 'pl-exp') : V(ex(8) - bp, procY - 4, lowY + 4, 1, 'pl-exp');
+    } else {
+      s3.tProc = T('scope: this report only', 'pt-tag', L.x1, lab(2), 0, 'end', { late: 1 });
+      s3.tFact = T('source: price-list.pdf', 'pt-tag', L.x1, lab(4), 0, 'end', { late: 1 });
+      s3.expLab = T('revisit if portal format changes', 'pt-tag', ex(8) - bp - 5, lab(3), 0, 'end', { late: 1 });
+      s3.exp = V(ex(8) - bp, procY - 4, procY + bh + 4, 1, 'pl-exp');
+    }
+
+    // ---- S4 revision: the source changes at Run 6; inherited state loses authority
+    var s4 = copy(s3);
+    var chgX = ex(5);
+    s4.exp = V(chgX, D ? L.top - 2 : L.top - 4, lane(4) + bh / 2 + 5, 1, 'pl-chg');
+    s4.expLab.o = 0;
+    s4.bProcB = R(ex(5), ex(6) - bp - ex(5), procY, bh, 1, 1);
+    s4.bProcR = R(ex(6) + bp, ex(8) - bp * 2 - ex(6), procY, bh, 1, 0);
+    s4.bFactB = R(ex(5), ex(6) - bp - ex(5), factY, bh, 1, 1);
+    s4.rst = { t: 'cap', x: ex(6) - bp + 2.5, y1: factY - 4, y2: factY + bh + 4, o: 1 };
+    s3.rst = { t: 'cap', x: ex(8) - bp + 2.5, y1: factY - 4, y2: factY + bh + 4, o: 0 };
+    if (D) {
+      s4.chgLab = T('source changed · wk 17', 'pt-tag halo', chgX + 6, (lane(0) + lane(1)) / 2 + 3.5, 1, 'start', { late: 1 });
+      s4.tRev = T('revised · wk 18', 'pt-tag', ex(6) + bp, tagY(procY), 1, 'start', { late: 1 });
+      s4.tReset = T('reset', 'pt-tag', ex(6) + 6, factY + bh - 0.5, 1, 'start', { late: 1 });
+      s4.tLocal = T('local only', 'pt-tag', ex(3) - bp * 2, tagY(failY), 1, 'end', { late: 1 });
+      if (!sTop) s4.tProc.o = 0; // under the bar it would meet "local only"
+    } else {
+      s4.chgLab = T('source changed', 'pt-tag halo', chgX + 5, lab(1), 1, 'start', { late: 1 });
+      s4.tProc.o = 0;
+      s4.tRev = T('revised · wk 18', 'pt-tag', L.x1, lab(2), 1, 'end', { late: 1 });
+      s4.tReset = T('reset', 'pt-tag', L.x1, lab(4), 1, 'end', { late: 1 });
+      s4.tFact.o = 0;
+      s4.tLocal = T('local only', 'pt-tag', L.x1, lab(3), 1, 'end', { late: 1 });
+    }
+    // revision elements, pre-geometry in S3
+    s3.chgLab = copy({ a: s4.chgLab }).a; s3.chgLab.o = 0;
+    s3.tRev = copy({ a: s4.tRev }).a; s3.tRev.o = 0;
+    s3.tReset = copy({ a: s4.tReset }).a; s3.tReset.o = 0;
+    s3.tLocal = copy({ a: s4.tLocal }).a; s3.tLocal.o = 0;
+
+    // ---- S5 evaluation: rows regroup into three comparison bands
+    var s5 = copy(s4);
+    var bandLane, bandLab;
+    if (D) {
+      bandLane = function (b) { return L.top + L.rowH * (0.5 + b * 1.4) + 3; };
+      bandLab = function (b) { return bandLane(b) + 3.5; };
+    } else {
+      bandLane = function (b) { return lane(b); };
+      bandLab = function (b) { return lab(b); };
+    }
+    var bands = ['Fresh start', 'More context / compute', 'With experience'];
+    for (k = 0; k < 3; k++) {
+      s5['bl' + k] = T(bands[k], D ? 'pt-band' : 'pt-band halo', L.lx, bandLab(k), 1, 'start', { late: 1 });
+      s4['bl' + k] = T(bands[k], D ? 'pt-band' : 'pt-band halo', L.lx, D ? lane(k === 2 ? 4 : k) - 9 : lab(k === 2 ? 4 : k), 0);
+    }
+    for (i = 0; i < 8; i++) {
+      s5['rA' + i] = G(cx(i), bandLane(0), gr, PAT.fresh[i], 1, 'gl', i);
+      s5['rB' + i] = G(cx(i), bandLane(1), gr, PAT.more[i], 1, 'gl', i);
+      s5['out' + i] = G(cx(i), bandLane(2), gr, 'check', 1, 'gl', i);
+      s5['out' + i].s = evalShapes[i].slice();
+    }
+    for (r = 0; r < 5; r++) {
+      var to = r < 2 ? r : 2;
+      if (s5['rk' + r]) { s5['rk' + r].o = 0; s5['rk' + r].y = bandLab(to) - 12; }
+      s5['rn' + r].o = 0; s5['rn' + r].y = bandLab(to);
+    }
+    if (s5.rk5) s5.rk5.o = 0;
+    if (s5.rn5) s5.rn5.o = 0;
+    // carried state collapses into a rule under "With experience"
+    var ruleY = bandLane(2) + gr + (D ? 8 : 6);
+    ['bProcA', 'bProcB', 'bProcR', 'bFactA', 'bFactB', 'bFail'].forEach(function (id) { var b = s5[id]; b.y = ruleY; b.h = 2; b.hz = 0; b.o = id.indexOf('bProc') === 0 ? 0.9 : 0; });
+    s5.bProcB.w = s5.bProcR.x - s5.bProcB.x;
+    if (!D) {
+      for (i = 0; i <= 8; i++) if (s5['gl' + i]) s5['gl' + i].y2 = ruleY;
+      var qt = '\u201cA test that cannot reveal the latter two cannot tell us what deserves to be retained.\u201d';
+      var qw = qt.split(' '), ql = '', qls = [], qmax = Math.floor((L.x1 - L.x0) / 6.1);
+      qw.forEach(function (w) { if ((ql + ' ' + w).trim().length > qmax) { qls.push(ql.trim()); ql = w; } else ql += ' ' + w; });
+      qls.push(ql.trim());
+      var qy = ruleY + 16;
+      qls.forEach(function (line, n) {
+        s5['q' + n] = T(line, 'pt-quote', L.x0, qy + n * 15, 1, 'start', { late: 1 });
+        s4['q' + n] = T(line, 'pt-quote', L.x0, qy + n * 15, 0);
+      });
+    }
+    s5.carLab = T('retained state', 'pt-kind', D ? L.lx : L.x0, D ? ruleY + 4 : ruleY + 11, D ? 1 : 0, 'start', { late: 1 });
+    s4.carLab = copy({ a: s5.carLab }).a; s4.carLab.o = 0; s4.carLab.y = lane(4);
+    ['tProc', 'tFact', 'expLab', 'chgLab', 'tRev', 'tReset', 'tLocal', 'actLab'].forEach(function (id) { if (s5[id]) s5[id].o = 0; });
+    s5.exp.o = 0; s5.rst.o = 0; s5.arr.o = 0; s5.act.o = 0; s5.act.cy = ruleY; s5.act.cx = ex(1) + bp; s5.act.r = 0;
+
+    // ---- S6 contract: zoom into the freshness check; it opens into its record
+    var s6 = copy(s5);
+    var fx = s5.bProcA.x + s5.bProcA.w * 0.3, fy = ruleY, Z = 2.6;
+    function zx(x) { return fx + (x - fx) * Z; }
+    function zy(y) { return fy + (y - fy) * Z; }
+    for (k in s6) {
+      var e = s6[k];
+      e.o = 0;
+      if (e.t === 'text') { e.x = zx(e.x); e.y = zy(e.y); }
+      else if (e.t === 'glyph') { e.cx = zx(e.cx); e.cy = zy(e.cy); e.r *= 1.8; }
+      else if (e.t === 'rect' || e.t === 'pile') { e.x = zx(e.x); e.y = zy(e.y); e.w *= Z; e.h *= Z; }
+      else if (e.t === 'vline' || e.t === 'cap') { e.x = zx(e.x); e.y1 = zy(e.y1); e.y2 = zy(e.y2); }
+      else if (e.t === 'circle') { e.cx = zx(e.cx); e.cy = zy(e.cy); }
+      else if (e.t === 'arrow') { for (var q = 0; q < 8; q += 2) { e.p[q] = zx(e.p[q]); e.p[q + 1] = zy(e.p[q + 1]); } }
+    }
+    var nodes = [
+      ['price-list.pdf', 'source', 'published 3 Mar', ''],
+      ['cand_7f3a', 'candidate', 'Before using a price list,', 'compare its date with the portal.'],
+      ['dec_2b91', 'decision · accepted', 'ops reviewer', 'wk 12'],
+      ['fact_c40e', 'trusted', 'scope: this report only', 'revisit if portal format changes']
+    ];
+    var ruleX = s5.bProcA.x, ruleW = s5.bProcA.w;
+    var nx, ny, nw, nh, gap;
+    var stackNodes = !D || L.W < 960;   // four boxes side by side need about 960 px or the record text drops below 10 px
+    if (!stackNodes) {
+      var cX = 18, cW = L.W - 36; gap = cW > 900 ? 40 : 30;
+      nw = (cW - gap * 3) / 4; nh = clamp(L.H * 0.4, 84, 104);
+      ny = clamp(L.H * 0.47 - nh / 2, 34, L.H - nh - 44);
+      var dfs = Math.min(10.5, (nw - 22) / 33 / CW);
+      for (k = 0; k < 4; k++) {
+        nx = cX + k * (nw + gap);
+        s6['n' + k] = { t: 'frame', x: nx, y: ny, w: nw, h: nh, o: 1 };
+        s5['n' + k] = { t: 'frame', x: ruleX + ruleW * k / 4, y: ruleY, w: ruleW / 4, h: 2, o: 0 };
+        s6['n' + k + 'a'] = T(nodes[k][0], 'pt-nid', nx + 12, ny + 22, 1, 'start', { late: 1 });
+        s6['n' + k + 'b'] = T(nodes[k][1], 'pt-kind', nx + 12, ny + 39, 1, 'start', { late: 1 });
+        s6['n' + k + 'c'] = T(nodes[k][2], 'pt-tag', nx + 12, ny + nh - 30, 1, 'start', { late: 1, fs: dfs });
+        if (nodes[k][3]) s6['n' + k + 'd'] = T(nodes[k][3], 'pt-tag', nx + 12, ny + nh - 15, 1, 'start', { late: 1, fs: dfs });
+        if (k < 3) {
+          var ay = ny + nh / 2, ax0 = nx + nw + 5, ax1 = nx + nw + gap - 5;
+          s6['na' + k] = { t: 'arrow', p: [ax0, ay, ax0 + 6, ay, ax1 - 6, ay, ax1, ay], d: 1, o: 1, cls: '' };
+          s5['na' + k] = { t: 'arrow', p: [ruleX + ruleW * (k + 1) / 4 - 1, ruleY, ruleX + ruleW * (k + 1) / 4, ruleY, ruleX + ruleW * (k + 1) / 4, ruleY, ruleX + ruleW * (k + 1) / 4 + 1, ruleY], d: 0, o: 0, cls: '' };
+        }
+      }
+      var n1x = cX + nw + gap;
+      s6.evLink = V(n1x + 22, ny + nh, ny + nh + 15, 1, 'pl-link');
+      s6.evid = T('evidence: price-list.pdf · p.3 · published 3 Mar', 'pt-tag', n1x + 22, ny + nh + 28, 1, 'middle', { late: 1 });
+      s6.evid.x = Math.max(cX + tw(s6.evid.txt, 10) / 2, n1x + 22);
+      s6.zLab = T('freshness check · Run 2 to Run 8 · opened as a record', 'pt-note', cX, ny - 14, 1, 'start', { late: 1 });
+    } else {
+      var mx = 12, mw = L.W - 24; gap = 11;
+      nh = clamp((L.H - 34 - gap * 3) / 4, 30, 40);
+      var mdet = ['published 3 Mar', 'freshness check', 'ops reviewer · wk 12', 'scope: this report only'];
+      for (k = 0; k < 4; k++) {
+        ny = 6 + k * (nh + gap);
+        s6['n' + k] = { t: 'frame', x: mx, y: ny, w: mw, h: nh, o: 1 };
+        s5['n' + k] = { t: 'frame', x: ruleX + ruleW * k / 4, y: ruleY, w: ruleW / 4, h: 2, o: 0 };
+        s6['n' + k + 'a'] = T(nodes[k][0], 'pt-nid', mx + 10, ny + nh / 2 - 1, 1, 'start', { late: 1, fs: 11 });
+        s6['n' + k + 'b'] = T(nodes[k][1], 'pt-kind', mx + mw - 10, ny + nh / 2 - 2, 1, 'end', { late: 1 });
+        s6['n' + k + 'c'] = T(mdet[k], 'pt-tag', mx + 10, ny + nh / 2 + 11, 1, 'start', { late: 1 });
+        if (k < 3) {
+          var vx = mx + 24, v0 = ny + nh + 2, v1 = ny + nh + gap - 2;
+          s6['na' + k] = { t: 'arrow', p: [vx, v0, vx, v0 + 2, vx, v1 - 2, vx, v1], d: 1, o: 1, cls: '' };
+          s5['na' + k] = { t: 'arrow', p: [ruleX, ruleY, ruleX, ruleY, ruleX, ruleY, ruleX + 1, ruleY], d: 0, o: 0, cls: '' };
+        }
+      }
+      s6.evid = T('evidence: price-list.pdf · p.3 · published 3 Mar', 'pt-tag', mx, 6 + 4 * nh + 3 * gap + 13, 1, 'start', { late: 1 });
+    }
+    // chain texts: hidden before the zoom, in place
+    for (k in s6) if (!s5[k] && s6[k].t === 'text') { s5[k] = copy({ a: s6[k] }).a; s5[k].o = 0; }
+    if (s6.evLink) { s5.evLink = copy({ a: s6.evLink }).a; s5.evLink.o = 0; s5.evLink.y2 = s5.evLink.y1; }
+
+    // ---- S7 closing: accumulated, older items hatched, resonance only on the changed decision
+    var s7 = copy(s4);
+    s7.bFail.hz = 1;
+    s7.tLocal.o = 1;
+    s7.tReset.o = 1;
+    return [s0, s1, s2, s3, s4, s5, s6, s7];
+  }
+
+  /* ---- Interpolation ------------------------------------------------------ */
+  function lerpEl(a, b, t) {
+    var o = {}, k, va, vb;
+    for (k in a) {
+      va = a[k]; vb = b[k];
+      if (typeof va === 'number') o[k] = (typeof vb === 'number') ? va + (vb - va) * t : va;
+      else if (Array.isArray(va)) { o[k] = []; for (var i = 0; i < va.length; i++) o[k][i] = va[i] + ((vb ? vb[i] : va[i]) - va[i]) * t; }
+      else o[k] = (t < 0.5 || vb == null) ? va : vb;
+    }
+    for (k in b) if (!(k in o)) o[k] = b[k];
+    return o;
+  }
+  function faded(a, f) { var o = {}; for (var k in a) o[k] = a[k]; o.o = (a.o == null ? 1 : a.o) * f; return o; }
+  var OUT = 0.35;
+  function op(e) { return e && e.o != null ? e.o : e ? 1 : 0; }
+  function mix(A, B, t) {
+    var out = {}, k, a, b, oa, ob;
+    if (t <= 0) return A;
+    if (t >= 1) return B;
+    for (k in A) out[k] = B[k] ? lerpEl(A[k], B[k], t) : faded(A[k], 1 - t);
+    for (k in B) if (!A[k]) out[k] = faded(B[k], t);
+    // labels never overlap as two legible sets: outgoing ones clear in the first 35%, incoming ones follow
+    for (k in out) {
+      if (out[k].t !== 'text') continue;
+      oa = op(A[k]); ob = op(B[k]);
+      if (oa > ob) out[k].o = ob + (oa - ob) * (1 - clamp(t / OUT, 0, 1));
+      else if (ob > oa) out[k].o = oa + (ob - oa) * clamp((t - OUT) / (1 - OUT), 0, 1);
+    }
+    return out;
+  }
+
+  /* ---- SVG renderer -------------------------------------------------------- */
+  var uid = 0;
+  function Renderer(svg) {
+    this.svg = svg; this.n = {}; this.id = 'p' + (++uid);
+    svg.innerHTML =
+      '<defs>' +
+      '<pattern id="' + this.id + 'h" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="4" height="4" fill="#f7f6f3"/><line x1="1" y1="0" x2="1" y2="4" stroke="#0a0a0a" stroke-width="1.1"/></pattern>' +
+      '<pattern id="' + this.id + 's" width="8" height="3" patternUnits="userSpaceOnUse"><line x1="0" y1=".5" x2="8" y2=".5" stroke="#0a0a0a" stroke-opacity=".42" stroke-width="1"/></pattern>' +
+      '</defs><g data-l="0"></g><g data-l="1"></g><g data-l="2"></g><g data-l="3"></g>';
+    this.layers = svg.querySelectorAll('g[data-l]');
+  }
+  function mk(tag, attrs, parent) {
+    var el = document.createElementNS(NS, tag);
+    for (var k in attrs) el.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(el);
+    return el;
+  }
+  function f1(v) { return Math.round(v * 10) / 10; }
+  Renderer.prototype.clear = function () { for (var k in this.n) this.n[k].root.remove(); this.n = {}; };
+  Renderer.prototype.node = function (k, e) {
+    var n = this.n[k];
+    if (n) return n;
+    var L = this.layers, g;
+    n = { t: e.t };
+    if (e.t === 'text') {
+      n.root = mk('text', { 'class': e.cls, 'text-anchor': e.a === 'middle' ? 'middle' : e.a === 'end' ? 'end' : 'start' }, L[3]);
+      n.root.textContent = e.txt;
+      if (e.fs) n.root.style.fontSize = e.fs + 'px';
+    } else if (e.t === 'glyph') {
+      n.root = mk('path', { 'class': 'gl' }, L[2]);
+    } else if (e.t === 'rect') {
+      g = n.root = mk('g', {}, L[1]);
+      n.a = mk('rect', { 'class': 'bar-solid' }, g);
+      n.b = mk('rect', { 'class': 'bar-hatch', fill: 'url(#' + this.id + 'h)' }, g);
+    } else if (e.t === 'pile') {
+      n.root = mk('rect', { 'class': 'pile', fill: 'url(#' + this.id + 's)' }, L[1]);
+    } else if (e.t === 'frame') {
+      n.root = mk('rect', { 'class': 'frame' }, L[1]);
+    } else if (e.t === 'vline') {
+      n.root = mk('line', { 'class': e.cls || 'pl-grid' }, L[0]);
+    } else if (e.t === 'cap') {
+      n.root = mk('path', { 'class': 'cap-mk' }, L[2]);
+    } else if (e.t === 'circle') {
+      n.root = mk('circle', { 'class': 'bead' }, L[3]);
+    } else if (e.t === 'arrow') {
+      g = n.root = mk('g', {}, L[2]);
+      n.h = mk('path', { 'class': 'arr-halo', pathLength: '1', 'stroke-dasharray': '1 1' }, g);
+      n.a = mk('path', { 'class': 'arr ' + (e.cls || ''), pathLength: '1', 'stroke-dasharray': '1 1' }, g);
+      n.b = mk('path', { 'class': 'arr-head ' + (e.cls || '') }, g);
+    }
+    this.n[k] = n;
+    return n;
+  };
+  Renderer.prototype.render = function (M, reveal) {
+    var k, e, n, o, el;
+    for (k in this.n) if (!M[k]) this.n[k].root.style.display = 'none';
+    for (k in M) {
+      e = M[k];
+      n = this.node(k, e);
+      o = e.o == null ? 1 : e.o;
+      if (e.late) o = o * o * o;
+      if (reveal && e.run != null) o *= reveal[e.run];
+      el = n.root;
+      if (o < 0.01) { if (n.vis !== false) { el.style.display = 'none'; n.vis = false; } continue; }
+      if (n.vis !== true) { el.style.display = ''; n.vis = true; }
+      el.setAttribute('opacity', f1(o * 100) / 100);
+      if (e.t === 'text') {
+        el.setAttribute('x', f1(e.x)); el.setAttribute('y', f1(e.y));
+      } else if (e.t === 'glyph') {
+        var s = e.s, r = e.r, x = e.cx, y = e.cy;
+        el.setAttribute('d', 'M' + f1(x + s[0] * r) + ' ' + f1(y + s[1] * r) + 'L' + f1(x + s[2] * r) + ' ' + f1(y + s[3] * r) +
+          'M' + f1(x + s[4] * r) + ' ' + f1(y + s[5] * r) + 'L' + f1(x + s[6] * r) + ' ' + f1(y + s[7] * r));
+      } else if (e.t === 'rect') {
+        var w = Math.max(0, e.w), h = Math.max(0, e.h), hz = clamp(e.hz || 0, 0, 1);
+        n.a.setAttribute('x', f1(e.x)); n.a.setAttribute('y', f1(e.y)); n.a.setAttribute('width', f1(w)); n.a.setAttribute('height', f1(h));
+        n.a.setAttribute('opacity', f1((1 - hz) * 100) / 100);
+        n.b.setAttribute('x', f1(e.x + 0.5)); n.b.setAttribute('y', f1(e.y + 0.5)); n.b.setAttribute('width', f1(Math.max(0, w - 1))); n.b.setAttribute('height', f1(Math.max(0, h - 1)));
+        n.b.setAttribute('opacity', f1(hz * 100) / 100);
+        n.b.style.display = hz < 0.01 ? 'none' : '';
+      } else if (e.t === 'pile' || e.t === 'frame') {
+        el.setAttribute('x', f1(e.x)); el.setAttribute('y', f1(e.y)); el.setAttribute('width', f1(Math.max(0, e.w))); el.setAttribute('height', f1(Math.max(0, e.h)));
+      } else if (e.t === 'vline') {
+        el.setAttribute('x1', f1(e.x) + 0.5); el.setAttribute('x2', f1(e.x) + 0.5); el.setAttribute('y1', f1(e.y1)); el.setAttribute('y2', f1(e.y2));
+      } else if (e.t === 'cap') {
+        el.setAttribute('d', 'M' + f1(e.x) + ' ' + f1(e.y1) + 'V' + f1(e.y2) + 'M' + f1(e.x + 3.5) + ' ' + f1(e.y1) + 'V' + f1(e.y2));
+      } else if (e.t === 'circle') {
+        el.setAttribute('cx', f1(e.cx)); el.setAttribute('cy', f1(e.cy)); el.setAttribute('r', f1(Math.max(0, e.r)));
+      } else if (e.t === 'arrow') {
+        var p = e.p, d = clamp(e.d, 0, 1);
+        var dd = 'M' + f1(p[0]) + ' ' + f1(p[1]) + 'C' + f1(p[2]) + ' ' + f1(p[3]) + ' ' + f1(p[4]) + ' ' + f1(p[5]) + ' ' + f1(p[6]) + ' ' + f1(p[7]);
+        n.a.setAttribute('d', dd); n.h.setAttribute('d', dd);
+        n.a.setAttribute('stroke-dashoffset', f1((1 - d) * 1000) / 1000);
+        n.h.setAttribute('stroke-dashoffset', f1((1 - d) * 1000) / 1000);
+        var dx = p[6] - p[4], dy = p[7] - p[5], len = Math.sqrt(dx * dx + dy * dy) || 1;
+        dx /= len; dy /= len;
+        var hs = 5.5, bx = p[6] - dx * hs, by = p[7] - dy * hs;
+        n.b.setAttribute('d', 'M' + f1(bx - dy * 3.6) + ' ' + f1(by + dx * 3.6) + 'L' + f1(p[6]) + ' ' + f1(p[7]) + 'L' + f1(bx + dy * 3.6) + ' ' + f1(by - dx * 3.6));
+        n.b.setAttribute('opacity', f1(clamp((d - 0.86) / 0.14, 0, 1) * 100) / 100);
+      }
+    }
+  };
+
+  /* ---- Main plate ---------------------------------------------------------- */
+  var plate = document.getElementById('plate');
+  var pin = plate.parentNode;
+  var body = plate.querySelector('.plate-body');
+  var R1 = new Renderer(plate.querySelector('.plate-svg'));
+  var caps = [].slice.call(plate.querySelectorAll('.cap'));
+  var figN = plate.querySelector('[data-fig-n]'), figT = plate.querySelector('[data-fig-t]'), figM = plate.querySelector('[data-fig-m]');
+  var chips = [].slice.call(plate.querySelectorAll('.chip'));
+  var progs = chips.map(function (c) { return c.querySelector('.chip-prog'); });
+  var chipNav = plate.querySelector('.chips');
+  var segWrap = plate.querySelector('.seg-wrap');
+  var segBtns = [].slice.call(plate.querySelectorAll('.seg-btn'));
+  var segNote = plate.querySelector('.seg-note');
+  var capKey = plate.querySelector('.cap-key');
+
+  var secIds = ['problem', 'decisions', 'state', 'revision', 'evaluation', 'contract'];
+  var secs = secIds.map(function (id) { return WM.track(document.getElementById(id)); });
+
+  var L = null, states = null, pinH = 0, lastS = -1, lastKey = '';
+  var variant = 'none';
+  var evalCur = PAT.none.map(function (n) { return shape(n); });
+  var reveal = null; // per-run opacity for the hero's first read
+  var activeChip = -2, figIdx = -1;
+
+  function measure() {
+    var W = body.clientWidth, H = body.clientHeight;
+    pinH = pin.offsetHeight;
+    if (!W || !H) return;
+    var key = W + 'x' + H;
+    if (key !== lastKey) {
+      lastKey = key;
+      L = layout(W, H);
+      R1.svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+      R1.clear();
+      states = build(L, evalCur);
+      if (!L.m) {
+        plate.style.setProperty('--seg-x', Math.round(L.x0) + 'px');
+        plate.style.setProperty('--seg-y', Math.round(L.lane(5) - 16) + 'px');
+      } else {
+        plate.style.setProperty('--seg-y', Math.round(H - 50) + 'px');
+      }
+    }
+    lastS = -1;
+    WM.invalidate();
+  }
+
+  function bounds(vh) {
+    var startL = vh * 0.92, endL = pinH + (vh - pinH) * 0.14, out = [];
+    for (var k = 0; k < secs.length; k++) {
+      var T0 = secs[k].top, a = T0 - startL, b = T0 - endL;
+      if (k === 0) a = Math.max(a, Math.min(b - 80, 6));
+      out.push([a, b]);
+    }
+    return out;
+  }
+
+  function computeS(y, vh) {
+    var B = bounds(vh), s = 0, raw = [];
+    for (var k = 0; k < B.length; k++) {
+      var p = WM.invLerp(B[k][0], B[k][1], y);
+      raw.push(p);
+      s += WM.reduced ? (p >= 0.5 ? 1 : 0) : WM.smooth(p);
+    }
+    return { s: s, B: B };
+  }
+
+  function draw(st) {
+    if (!states) return;
+    var res = computeS(st.y, st.vh), s = res.s;
+    var animating = !!reveal || evalTweening;
+    if (Math.abs(s - lastS) < 0.0005 && !animating && !forceDraw) return;
+    forceDraw = false;
+    lastS = s;
+    var i = Math.min(5, Math.floor(s)), t = s - i;
+    var M = mix(states[i], states[i + 1], t);
+    R1.render(M, reveal);
+
+    // captions crossfade with the figure
+    for (var c = 0; c < caps.length; c++) {
+      var w = clamp((0.5 - Math.abs(s - c)) * 3.2, 0, 1);
+      caps[c].style.opacity = w;
+      caps[c].setAttribute('aria-hidden', w < 0.5 ? 'true' : 'false');
+    }
+    var fi = Math.round(s);
+    if (fi !== figIdx) {
+      figIdx = fi;
+      figN.textContent = FIGS[fi][0]; figT.textContent = FIGS[fi][1]; figM.textContent = FIGS[fi][0];
+      capKey.setAttribute('data-k', fi === 3 ? 'tags' : fi === 6 ? 'none' : 'legend');
+    }
+    // segmented control lives in the Evaluation state
+    var so = clamp((0.5 - Math.abs(s - 5)) * 3.2, 0, 1);
+    segWrap.style.opacity = so;
+    segWrap.style.visibility = so > 0.02 ? 'visible' : 'hidden';
+
+    // chapter index
+    var ac = fi >= 2 && fi <= 5 ? fi - 2 : -1;
+    if (ac !== activeChip) {
+      activeChip = ac;
+      chips.forEach(function (ch, j) {
+        if (j === ac) ch.setAttribute('aria-current', 'true'); else ch.removeAttribute('aria-current');
+      });
+      if (!chipNav.contains(document.activeElement)) setRoving(ac < 0 ? 0 : ac);
+      if (L && L.m && ac >= 0) {
+        var ch = chips[ac], nl = chipNav.scrollLeft, cl = ch.offsetLeft, cw = ch.offsetWidth, vw = chipNav.clientWidth;
+        if (cl < nl || cl + cw > nl + vw) chipNav.scrollTo({ left: cl - 8, behavior: WM.reduced ? 'instant' : 'smooth' });
+      }
+    }
+    var B = res.B;
+    for (var j = 0; j < 4; j++) {
+      var pr = 0;
+      if (j === ac) pr = WM.invLerp(B[j + 1][1], B[j + 2][1], st.y);
+      progs[j].style.transform = 'scaleX(' + (j === ac ? Math.max(0.04, pr).toFixed(3) : 0) + ')';
+    }
+    return animating;
+  }
+  var forceDraw = true;
+  WM.frame(draw);
+
+  /* ---- Hero: the eight runs read in one by one on load (no loop) ---------- */
+  function startReveal() {
+    if (WM.reduced || (window.scrollY || 0) > 40 || location.hash) return;
+    reveal = [0, 0, 0, 0, 0, 0, 0, 0];
+    var t0 = performance.now() + 450;
+    function step(now) {
+      var done = true;
+      for (var i = 0; i < 8; i++) {
+        var p = clamp((now - t0 - i * 230) / 380, 0, 1);
+        reveal[i] = WM.easeOut(p);
+        if (p < 1) done = false;
+      }
+      if (WM.reduced) done = true;
+      if (done) { reveal = null; }
+      forceDraw = true;
+      WM.invalidate();
+      if (!done) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  WM.onReduced(function (r) { if (r) reveal = null; forceDraw = true; WM.invalidate(); });
+
+  /* ---- Chapter index: buttons, roving tabindex, scroll-linked jumps -------- */
+  function setRoving(idx) { chips.forEach(function (c, j) { c.tabIndex = j === idx ? 0 : -1; }); }
+  function chapterTop(id) {
+    var el = document.getElementById(id);
+    var m = parseFloat(getComputedStyle(el).scrollMarginTop) || pinH;
+    return el.getBoundingClientRect().top + (window.scrollY || 0) - m;
+  }
+  chips.forEach(function (ch, j) {
+    ch.addEventListener('click', function () {
+      setRoving(j);
+      var id = ch.getAttribute('data-target');
+      window.scrollTo({ top: Math.ceil(chapterTop(id)), behavior: WM.reduced ? 'instant' : 'smooth' });
+      if (history.replaceState) history.replaceState(null, '', '#' + id);
+    });
+  });
+  chipNav.addEventListener('keydown', function (e) {
+    var cur = chips.indexOf(document.activeElement);
+    if (cur < 0) return;
+    var nx = null;
+    if (e.key === 'ArrowRight') nx = (cur + 1) % 4;
+    else if (e.key === 'ArrowLeft') nx = (cur + 3) % 4;
+    else if (e.key === 'Home') nx = 0;
+    else if (e.key === 'End') nx = 3;
+    if (nx === null) return;
+    e.preventDefault();
+    setRoving(nx);
+    chips[nx].focus();
+  });
+
+  /* ---- Evaluation switch: Helps · No effect · Hurts (default: No effect) --- */
+  var evalTweening = false, cancelEval = null;
+  function setVariant(v, focus) {
+    if (v === variant) { if (focus) focusSeg(v); return; }
+    variant = v;
+    segBtns.forEach(function (b) {
+      var on = b.getAttribute('data-v') === v;
+      b.setAttribute('aria-checked', on ? 'true' : 'false');
+      b.tabIndex = on ? 0 : -1;
+    });
+    if (focus) focusSeg(v);
+    segNote.textContent = NOTE[v];
+    var from = evalCur.map(function (a) { return a.slice(); });
+    var to = PAT[v].map(function (n) { return shape(n); });
+    if (cancelEval) cancelEval();
+    evalTweening = true;
+    cancelEval = WM.tween(WM.reduced ? 0 : 420, function (p) {
+      for (var i = 0; i < 8; i++) for (var q = 0; q < 8; q++) evalCur[i][q] = from[i][q] + (to[i][q] - from[i][q]) * p;
+      if (states) for (i = 0; i < 8; i++) { states[5]['out' + i].s = evalCur[i].slice(); states[6]['out' + i].s = evalCur[i].slice(); }
+      forceDraw = true;
+      if (p >= 1) evalTweening = false;
+      WM.invalidate();
+    }, WM.easeInOut);
+  }
+  function focusSeg(v) { segBtns.forEach(function (b) { if (b.getAttribute('data-v') === v) b.focus(); }); }
+  segBtns.forEach(function (b) {
+    b.addEventListener('click', function () { setVariant(b.getAttribute('data-v'), false); });
+  });
+  plate.querySelector('.seg').addEventListener('keydown', function (e) {
+    var order = ['help', 'none', 'hurt'], cur = order.indexOf(variant), nx = null;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nx = (cur + 1) % 3;
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') nx = (cur + 2) % 3;
+    if (nx === null) return;
+    e.preventDefault();
+    setVariant(order[nx], true);
+  });
+
+  /* ---- Closing plate: same component, accumulated state, static ----------- */
+  var closing = document.getElementById('plate-closing');
+  var cBody = closing.querySelector('.plate-body');
+  var R2 = new Renderer(closing.querySelector('.plate-svg'));
+  var cKey = '';
+  function drawClosing() {
+    var W = cBody.clientWidth, H = cBody.clientHeight, key = W + 'x' + H;
+    if (!W || !H || key === cKey) return;
+    cKey = key;
+    R2.svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    R2.clear();
+    R2.render(build(layout(W, H), PAT.none.map(function (n) { return shape(n); }))[7], null);
+  }
+
+  /* ---- Boot ---------------------------------------------------------------- */
+  function all() { measure(); drawClosing(); }
+  all();
+  window.addEventListener('resize', all);
+  if (window.ResizeObserver) new ResizeObserver(all).observe(body);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(all);
+  window.addEventListener('load', function () {
+    all();
+    if (location.hash) {
+      var id = location.hash.slice(1), el = document.getElementById(id);
+      if (el && secIds.indexOf(id) > -1) window.scrollTo({ top: Math.ceil(chapterTop(id)), behavior: 'instant' });
+    }
+    startReveal();
+  });
+})();
+</script>
+</body>
+</html>

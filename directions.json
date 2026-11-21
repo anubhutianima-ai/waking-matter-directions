@@ -1,0 +1,643 @@
+{
+  "title": "Waking Matter website: four interactive directions",
+  "generated": "2026-11-20",
+  "feature": "waking-matter-website",
+  "product": "other",
+  "mode": "hifi-interactive",
+  "input_gaps": [
+    "No analytics baseline for what visitors do on the current site.",
+    "No user research; reader ratings are design judgement.",
+    "Founder sign-off pending on B's reading of the mark and on all new microcopy.",
+    "Chrome only; Safari, Firefox, iOS and Android untested; no mid-range phone performance measurement.",
+    "No screen reader pass; accessibility checks are automated plus keyboard."
+  ],
+  "style_register": {
+    "energy": {
+      "value": "low",
+      "source": "explicit",
+      "evidence": "“It’s a serious business and it’s an AI lab.” The live site has a single 0.9 s rise. Judged medium-low: motion is purposeful but restrained.",
+      "implications": [
+        "Motion only where it encodes an idea.",
+        "One travelling element.",
+        "No loops."
+      ]
+    },
+    "finish": {
+      "value": "high",
+      "source": "baseline",
+      "evidence": "Newsreader at 400 with −0.035em tracking, hairlines, mono labels. The brief asks to do better than the references.",
+      "implications": [
+        "Type and real diagrams carry the page.",
+        "No illustration."
+      ]
+    },
+    "density": {
+      "value": "low",
+      "source": "baseline",
+      "evidence": "72rem content width, 38em measure, 6.5rem band padding.",
+      "implications": [
+        "One idea per viewport.",
+        "Copy holds the site’s measure."
+      ]
+    },
+    "weight": {
+      "value": "low",
+      "source": "baseline",
+      "evidence": "Serif at 400, 1px hairlines, 11px uppercase labels.",
+      "implications": [
+        "Contrast comes from ground and scale, not weight."
+      ]
+    },
+    "seriousness": {
+      "value": "high",
+      "source": "explicit",
+      "evidence": "The same brief quote. The site’s own caveats: “not results we are claiming here.”",
+      "implications": [
+        "No bounce, emoji or hype.",
+        "Every demonstration is labelled illustrative."
+      ]
+    }
+  },
+  "output": {
+    "wrapper": "index.html",
+    "demos": {
+      "A": "direction-A.html",
+      "B": "direction-B.html",
+      "C": "direction-C.html",
+      "D": "direction-D.html"
+    },
+    "shared_tokens": "shared/tokens.css"
+  },
+  "directions": [
+    {
+      "index": 1,
+      "label": "A",
+      "name": "The Second Run",
+      "demo_path": "direction-A.html",
+      "core_change": "The hero runs the same weekly task twice. Run 2 starts with a check that Run 1 earned. One thread and bead then travels down the page and becomes a bundle of stored history, a gate, four lanes, weekly passes, a column of ticks and finally the mark.",
+      "rationale": "Shows the thesis working in the first six seconds and gives one literal object that connects every section. Void ground keeps the current hero feel.",
+      "best_for": "First-time visitors, investors and partners who need the idea in seconds.",
+      "risk": "Most scroll choreography of the four. Dark ground for all long copy. Needs a mid-range phone performance check.",
+      "register_fit": "Serious and restrained: hairline traces, no illustration, resonance only when experience changes a decision.",
+      "applicable_states": [
+        {
+          "component": "Text link",
+          "applicable": [
+            "rest",
+            "hover",
+            "focus-visible"
+          ],
+          "implemented": [
+            "rest",
+            "hover",
+            "focus-visible"
+          ],
+          "not_applicable": [
+            {
+              "state": "disabled",
+              "reason": "Links are never disabled."
+            },
+            {
+              "state": "loading",
+              "reason": "Links navigate or open mail."
+            }
+          ]
+        },
+        {
+          "component": "Replay button",
+          "applicable": [
+            "rest",
+            "hover",
+            "focus-visible",
+            "pressed"
+          ],
+          "implemented": [
+            "rest",
+            "hover",
+            "focus-visible"
+          ],
+          "not_applicable": [
+            {
+              "state": "pressed",
+              "reason": "Replay restarts a one-shot animation; no persistent pressed state."
+            }
+          ]
+        }
+      ],
+      "motion_contract": {
+        "uses_motion": true,
+        "items": [
+          {
+            "target": "hero two-run figure",
+            "purpose": "guidance",
+            "trigger": "page load, once",
+            "properties": [
+              "stroke-dashoffset",
+              "opacity"
+            ],
+            "duration_ms": 6000,
+            "reduced_motion": "finished figure, no playback"
+          },
+          {
+            "target": "thread and bead",
+            "purpose": "continuity",
+            "trigger": "scroll",
+            "properties": [
+              "transform",
+              "stroke-dashoffset"
+            ],
+            "duration_ms": null,
+            "reduced_motion": "every scene shown at rest, bead hidden"
+          },
+          {
+            "target": "closing mark",
+            "purpose": "brand-expression",
+            "trigger": "scroll to end",
+            "properties": [
+              "opacity",
+              "transform"
+            ],
+            "duration_ms": null,
+            "reduced_motion": "mark and wordmark shown"
+          }
+        ]
+      },
+      "evidence_cited": [
+        {
+          "type": "prior_art",
+          "ref": "wakingmatter.com (live site)",
+          "note": "Zero-JS Astro page, one 0.9 s rise; states the idea in text and never shows it. Brand tokens, fonts and lockups are reused verbatim."
+        },
+        {
+          "type": "prior_art",
+          "ref": "Agent Memory Contracts README",
+          "note": "Content-addressed cand_, dec_, fact_ ids; a trusted record needs a reducer decision; supersession is a directed graph. Used as the demo scenario."
+        },
+        {
+          "type": "prior_art",
+          "ref": "pramaanalabs.ai",
+          "note": "Blueprint-style hero with decorative imagery and five accent colours (observed 20 Nov 2026). Lesson taken: a hero that is a drawing. Lesson rejected: decorative imagery that encodes nothing."
+        },
+        {
+          "type": "prior_art",
+          "ref": "swarms.ai",
+          "note": "Isometric stack hero that explains the product (observed 20 Nov 2026). Lesson taken: the hero should explain the product. Lesson rejected: a template look, a stats wall and a newsletter modal over the hero."
+        }
+      ],
+      "sims_summary": null,
+      "metric_hypothesis": null,
+      "fluent_components_used": [],
+      "distance_profile": {
+        "information_architecture": "One timeline of runs, marked in weeks. Sections are moments in an agent’s life.",
+        "interaction_model": "Autoplay hero (once), then scroll-scrubbed. Scroll is time.",
+        "navigation_or_entry": "Entry is a demonstration. A left spine of weeks shows position.",
+        "visual_hierarchy": "Left type, right traces; one column with a left spine below.",
+        "surface_depth": "Flat hairlines on void. No cards.",
+        "palette_strategy": "Void throughout. Ivory type. Resonance only when experience changes a decision."
+      }
+    },
+    {
+      "index": 2,
+      "label": "B",
+      "name": "The Aperture",
+      "demo_path": "direction-B.html",
+      "core_change": "The page is the mark. The hero annotates the logo (provenance, memory, evaluation), the pillars become fixed rails, an iris turns the page from void to ivory, every section boundary is a gate that inscribes a tick on both rails, and the close re-forms the mark around the bead with the accumulated ledger.",
+      "rationale": "Most brand-faithful: the logo is the structure, and the dark-to-ivory arc matches the current site.",
+      "best_for": "A distinctive, ownable identity moment; returning readers who know the brand.",
+      "risk": "The reading of the mark (bead = memory, left pillar = provenance, right pillar = evaluation) is a proposal and needs founder sign-off. Hero explains the vocabulary more than the mechanism.",
+      "register_fit": "Monumental and calm; one iris moment, otherwise hairlines and ticks.",
+      "applicable_states": [
+        {
+          "component": "Rail tick link",
+          "applicable": [
+            "rest",
+            "hover",
+            "focus-visible",
+            "current"
+          ],
+          "implemented": [
+            "rest",
+            "hover",
+            "focus-visible",
+            "current"
+          ],
+          "not_applicable": [
+            {
+              "state": "disabled",
+              "reason": "Every tick is a valid anchor."
+            }
+          ]
+        }
+      ],
+      "motion_contract": {
+        "uses_motion": true,
+        "items": [
+          {
+            "target": "pillars and bead",
+            "purpose": "continuity",
+            "trigger": "scroll",
+            "properties": [
+              "transform",
+              "opacity"
+            ],
+            "duration_ms": null,
+            "reduced_motion": "opened frame shown, no travel"
+          },
+          {
+            "target": "iris wake",
+            "purpose": "brand-expression",
+            "trigger": "scroll",
+            "properties": [
+              "clip-path radius"
+            ],
+            "duration_ms": null,
+            "reduced_motion": "no iris; ivory ground from the start of the opened frame"
+          },
+          {
+            "target": "gate ticks",
+            "purpose": "feedback",
+            "trigger": "section boundary passes the bead",
+            "properties": [
+              "opacity",
+              "stroke-dashoffset"
+            ],
+            "duration_ms": null,
+            "reduced_motion": "all ticks inscribed"
+          }
+        ]
+      },
+      "evidence_cited": [
+        {
+          "type": "prior_art",
+          "ref": "wakingmatter.com (live site)",
+          "note": "Zero-JS Astro page, one 0.9 s rise; states the idea in text and never shows it. Brand tokens, fonts and lockups are reused verbatim."
+        },
+        {
+          "type": "prior_art",
+          "ref": "Agent Memory Contracts README",
+          "note": "Content-addressed cand_, dec_, fact_ ids; a trusted record needs a reducer decision; supersession is a directed graph. Used as the demo scenario."
+        },
+        {
+          "type": "prior_art",
+          "ref": "pramaanalabs.ai",
+          "note": "Blueprint-style hero with decorative imagery and five accent colours (observed 20 Nov 2026). Lesson taken: a hero that is a drawing. Lesson rejected: decorative imagery that encodes nothing."
+        },
+        {
+          "type": "prior_art",
+          "ref": "swarms.ai",
+          "note": "Isometric stack hero that explains the product (observed 20 Nov 2026). Lesson taken: the hero should explain the product. Lesson rejected: a template look, a stats wall and a newsletter modal over the hero."
+        }
+      ],
+      "sims_summary": null,
+      "metric_hypothesis": null,
+      "fluent_components_used": [],
+      "distance_profile": {
+        "information_architecture": "The page is the mark: chambers about a central axis, sections are gates.",
+        "interaction_model": "Scroll-driven gates, accumulating ticks, iris wake.",
+        "navigation_or_entry": "The pillars are the navigation. Entry is the mark opening.",
+        "visual_hierarchy": "Centered axis, symmetric chambers, monumental mark.",
+        "surface_depth": "Fixed rails over content, two clipped ground layers.",
+        "palette_strategy": "Void hero inverts to ivory at the wake."
+      }
+    },
+    {
+      "index": 3,
+      "label": "C",
+      "name": "The Record",
+      "demo_path": "direction-C.html",
+      "core_change": "The hero is an interactive record you can operate: Accept, Reject, Source changed, and an attempt to promote without a decision that the validator refuses. That one record then travels down the page and changes face from card to contract graph to ledger; the four research questions are the ledger's unfilled columns.",
+      "rationale": "Lets visitors operate the memory contract instead of reading about it, and keeps the evaluation column honest: 'not yet measured'.",
+      "best_for": "Builders evaluating the Agent Memory Contracts library; engineers and technical partners.",
+      "risk": "Demo ids and states mirror the library and need engineering review. A click-first hero asks more of a first-time visitor. Heaviest interaction logic.",
+      "register_fit": "Precise and tool-like: one dark card on ivory paper, mono details.",
+      "applicable_states": [
+        {
+          "component": "Record card",
+          "applicable": [
+            "candidate",
+            "confirming",
+            "trusted",
+            "rejected",
+            "stale",
+            "needs-revision",
+            "invalid-promotion"
+          ],
+          "implemented": [
+            "candidate",
+            "confirming",
+            "trusted",
+            "rejected",
+            "stale",
+            "needs-revision",
+            "invalid-promotion"
+          ],
+          "not_applicable": [
+            {
+              "state": "loading",
+              "reason": "All data is local and illustrative."
+            }
+          ]
+        },
+        {
+          "component": "Card button",
+          "applicable": [
+            "rest",
+            "hover",
+            "focus-visible",
+            "disabled"
+          ],
+          "implemented": [
+            "rest",
+            "hover",
+            "focus-visible",
+            "disabled"
+          ],
+          "not_applicable": []
+        }
+      ],
+      "motion_contract": {
+        "uses_motion": true,
+        "items": [
+          {
+            "target": "record card",
+            "purpose": "continuity",
+            "trigger": "scroll between scenes",
+            "properties": [
+              "transform",
+              "opacity",
+              "width"
+            ],
+            "duration_ms": null,
+            "reduced_motion": "each face shown in place"
+          },
+          {
+            "target": "card state change",
+            "purpose": "feedback",
+            "trigger": "button press",
+            "properties": [
+              "opacity",
+              "transform"
+            ],
+            "duration_ms": 160,
+            "reduced_motion": "instant state replacement"
+          },
+          {
+            "target": "invalid promotion shake",
+            "purpose": "feedback",
+            "trigger": "promote without a decision",
+            "properties": [
+              "transform"
+            ],
+            "duration_ms": 240,
+            "reduced_motion": "error text only"
+          }
+        ]
+      },
+      "evidence_cited": [
+        {
+          "type": "prior_art",
+          "ref": "wakingmatter.com (live site)",
+          "note": "Zero-JS Astro page, one 0.9 s rise; states the idea in text and never shows it. Brand tokens, fonts and lockups are reused verbatim."
+        },
+        {
+          "type": "prior_art",
+          "ref": "Agent Memory Contracts README",
+          "note": "Content-addressed cand_, dec_, fact_ ids; a trusted record needs a reducer decision; supersession is a directed graph. Used as the demo scenario."
+        },
+        {
+          "type": "prior_art",
+          "ref": "pramaanalabs.ai",
+          "note": "Blueprint-style hero with decorative imagery and five accent colours (observed 20 Nov 2026). Lesson taken: a hero that is a drawing. Lesson rejected: decorative imagery that encodes nothing."
+        },
+        {
+          "type": "prior_art",
+          "ref": "swarms.ai",
+          "note": "Isometric stack hero that explains the product (observed 20 Nov 2026). Lesson taken: the hero should explain the product. Lesson rejected: a template look, a stats wall and a newsletter modal over the hero."
+        }
+      ],
+      "sims_summary": null,
+      "metric_hypothesis": null,
+      "fluent_components_used": [],
+      "distance_profile": {
+        "information_architecture": "One record through the contract states. Questions are ledger columns.",
+        "interaction_model": "Click-first hero playground, then a card that travels and morphs.",
+        "navigation_or_entry": "Entry is operating the record. A state-machine stepper navigates.",
+        "visual_hierarchy": "Prose left, dark card right. The card is the focal object.",
+        "surface_depth": "A floating dark card with one shadow over flat paper.",
+        "palette_strategy": "Ivory page with one void card as the only inverse."
+      }
+    },
+    {
+      "index": 4,
+      "label": "D",
+      "name": "The Instrument",
+      "demo_path": "direction-D.html",
+      "core_change": "Read like a paper, behave like an instrument. One wide plate of eight weekly runs is pinned at the top and morphs through the four research questions (decisions, useful state, revision, evaluation), then zooms into one record. Chapter chips navigate; an outcome switch defaults to 'No effect'.",
+      "rationale": "The research agenda is the page. The most credible register for an AI lab; the honest default of 'No effect' is the strongest single idea.",
+      "best_for": "Researchers, collaborators and technical reviewers looking for signs of rigor.",
+      "risk": "Pinned rather than travelling: the least dramatic scroll. Ivory only, no dark hero. On a 768 px tall tablet window the chapter chip can highlight the next scene for a moment after a jump to Repeated work.",
+      "register_fit": "Paper and ink: hairline frames, mono labels, figure numbers.",
+      "applicable_states": [
+        {
+          "component": "Chapter chip",
+          "applicable": [
+            "rest",
+            "hover",
+            "focus-visible",
+            "current"
+          ],
+          "implemented": [
+            "rest",
+            "hover",
+            "focus-visible",
+            "current"
+          ],
+          "not_applicable": [
+            {
+              "state": "disabled",
+              "reason": "All four chapters are always available."
+            }
+          ]
+        },
+        {
+          "component": "Outcome switch",
+          "applicable": [
+            "rest",
+            "hover",
+            "focus-visible",
+            "selected"
+          ],
+          "implemented": [
+            "rest",
+            "hover",
+            "focus-visible",
+            "selected"
+          ],
+          "not_applicable": []
+        }
+      ],
+      "motion_contract": {
+        "uses_motion": true,
+        "items": [
+          {
+            "target": "plate morph",
+            "purpose": "continuity",
+            "trigger": "scroll between chapters",
+            "properties": [
+              "x",
+              "y",
+              "opacity"
+            ],
+            "duration_ms": null,
+            "reduced_motion": "plate snaps between states at chapter boundaries"
+          },
+          {
+            "target": "outcome switch result",
+            "purpose": "feedback",
+            "trigger": "radio change",
+            "properties": [
+              "opacity"
+            ],
+            "duration_ms": 420,
+            "reduced_motion": "instant"
+          },
+          {
+            "target": "chapter progress",
+            "purpose": "guidance",
+            "trigger": "scroll",
+            "properties": [
+              "transform"
+            ],
+            "duration_ms": null,
+            "reduced_motion": "static underline on the current chip"
+          }
+        ]
+      },
+      "evidence_cited": [
+        {
+          "type": "prior_art",
+          "ref": "wakingmatter.com (live site)",
+          "note": "Zero-JS Astro page, one 0.9 s rise; states the idea in text and never shows it. Brand tokens, fonts and lockups are reused verbatim."
+        },
+        {
+          "type": "prior_art",
+          "ref": "Agent Memory Contracts README",
+          "note": "Content-addressed cand_, dec_, fact_ ids; a trusted record needs a reducer decision; supersession is a directed graph. Used as the demo scenario."
+        },
+        {
+          "type": "prior_art",
+          "ref": "pramaanalabs.ai",
+          "note": "Blueprint-style hero with decorative imagery and five accent colours (observed 20 Nov 2026). Lesson taken: a hero that is a drawing. Lesson rejected: decorative imagery that encodes nothing."
+        },
+        {
+          "type": "prior_art",
+          "ref": "swarms.ai",
+          "note": "Isometric stack hero that explains the product (observed 20 Nov 2026). Lesson taken: the hero should explain the product. Lesson rejected: a template look, a stats wall and a newsletter modal over the hero."
+        }
+      ],
+      "sims_summary": null,
+      "metric_hypothesis": null,
+      "fluent_components_used": [],
+      "distance_profile": {
+        "information_architecture": "Chapters are the four research questions.",
+        "interaction_model": "A pinned plate morphs in place. Index jumps. Outcome switch.",
+        "navigation_or_entry": "Chapter chips in the plate caption strip.",
+        "visual_hierarchy": "Stacked: wide plate over a text column.",
+        "surface_depth": "Flat paper and ink. Hairline-framed figure.",
+        "palette_strategy": "Ivory only. Ink and hairlines. No dark ground."
+      }
+    }
+  ],
+  "direction_distance_gate": {
+    "dimensions": [
+      "information_architecture",
+      "interaction_model",
+      "navigation_or_entry",
+      "visual_hierarchy",
+      "surface_depth",
+      "palette_strategy"
+    ],
+    "minimum_pairwise_differences": 3,
+    "requires_structural_difference": true,
+    "requires_visual_difference": true,
+    "pairs": [
+      {
+        "pair": "A-B",
+        "different_dimensions": [
+          "information_architecture",
+          "interaction_model",
+          "navigation_or_entry",
+          "visual_hierarchy",
+          "surface_depth",
+          "palette_strategy"
+        ],
+        "result": "pass"
+      },
+      {
+        "pair": "A-C",
+        "different_dimensions": [
+          "information_architecture",
+          "interaction_model",
+          "navigation_or_entry",
+          "visual_hierarchy",
+          "surface_depth",
+          "palette_strategy"
+        ],
+        "result": "pass"
+      },
+      {
+        "pair": "A-D",
+        "different_dimensions": [
+          "information_architecture",
+          "interaction_model",
+          "navigation_or_entry",
+          "visual_hierarchy",
+          "palette_strategy"
+        ],
+        "result": "pass"
+      },
+      {
+        "pair": "B-C",
+        "different_dimensions": [
+          "information_architecture",
+          "interaction_model",
+          "navigation_or_entry",
+          "visual_hierarchy",
+          "surface_depth",
+          "palette_strategy"
+        ],
+        "result": "pass"
+      },
+      {
+        "pair": "B-D",
+        "different_dimensions": [
+          "information_architecture",
+          "interaction_model",
+          "navigation_or_entry",
+          "visual_hierarchy",
+          "surface_depth",
+          "palette_strategy"
+        ],
+        "result": "pass"
+      },
+      {
+        "pair": "C-D",
+        "different_dimensions": [
+          "information_architecture",
+          "interaction_model",
+          "navigation_or_entry",
+          "visual_hierarchy",
+          "surface_depth",
+          "palette_strategy"
+        ],
+        "result": "pass"
+      }
+    ]
+  },
+  "recommendation": {
+    "direction": "A",
+    "reason": "Only direction where the hero shows the idea working and one element then links every section; keeps the current dark hero.",
+    "alternatives": "B if the logo should be the idea; C for a builder audience; D for a researcher audience."
+  },
+  "status": "Awaiting selection. Recommendation: A."
+}

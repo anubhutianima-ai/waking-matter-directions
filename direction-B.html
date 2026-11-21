@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="en" data-ground="void" data-product="waking-matter">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Waking Matter · Direction B · The Aperture</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="shared/tokens.css">
+<style>
+/* ==========================================================================
+   Direction B · The Aperture
+   The page is the mark: two fixed rails (pillars), a bead on a central axis,
+   a gate at every section boundary, and a ledger of marks that accumulates
+   on the pillars. Default CSS = the static composition (no JS / reduced
+   motion). html.motion (added by the script) enables the fixed frame.
+   ========================================================================== */
+:root{
+  --axis:50%;
+  --ch-inset:max(var(--page-pad),6.5rem);
+  --gutter:5rem;
+  --pitch:32px;
+  --tw:60px;
+  --glyph:18px;
+  --interlude:123svh;
+}
+body{background:var(--void)}
+main{display:block;position:relative;z-index:2}
+.site-header{position:relative;z-index:3}
+.site-header .logo{min-height:32px}
+
+/* ---- Static grounds (overridden to transparent in motion mode) --------- */
+.prelude{position:relative;background:var(--void);color:var(--ivory)}
+.chambers,.close,.site-footer{background:var(--ivory);color:var(--void)}
+html.motion .prelude,html.motion .chambers,html.motion .close,html.motion .site-footer{background:transparent}
+
+/* ---- Fixed frame: void layer, ivory layer (iris), ring, darts ----------- */
+.frame{display:none}
+html.motion .frame{display:block}
+.layer{position:fixed;inset:0;pointer-events:none;z-index:0}
+.layer--void{background:var(--void)}
+.layer--ivory{background:var(--ivory);visibility:hidden;clip-path:circle(0px at 50% 42%)}
+.fsvg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.f-axis--void{stroke:var(--hair-void-strong)}
+.f-axis--ivory{stroke:var(--hair-strong)}
+.ring,.darts{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:visible}
+.ring circle{fill:none;stroke:var(--resonance);stroke-width:1.25}
+.darts line{stroke:var(--void-56);stroke-width:1}
+
+/* ---- Entrance: the brand's single rise ---------------------------------- */
+.rise{animation:rise var(--dur-rise) var(--ease) both}
+.rise--late{animation-delay:.15s}
+html.motion.entering .layer--void .fsvg{animation:rise var(--dur-rise) var(--ease) .15s both}
+html[data-reduced="true"] .rise,html[data-reduced="true"] .fsvg{animation:none}
+@media (prefers-reduced-motion:reduce){.rise,.fsvg{animation:none}}
+
+/* ---- Hero ------------------------------------------------------------------ */
+.hero{position:relative;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);align-items:center;gap:2rem;
+  width:min(100% - 2 * var(--page-pad),var(--content));margin-inline:auto;min-height:calc(100svh - var(--header-h));padding-block:2.5rem 4rem}
+.hero-text .label{color:var(--ivory-72);margin-bottom:1.6rem}
+.hero-text .hero-h1{max-width:9.6em}
+.hero-mark{position:relative;margin:0;justify-self:center;height:min(64svh,46rem);aspect-ratio:64/104}
+.mark-svg{width:100%;height:100%}
+html.motion .mark-svg{visibility:hidden}
+.annot,.annot-in{position:absolute;inset:0}
+.ann{position:absolute;top:50%;margin-top:-.75em;font-family:var(--font-mono);font-size:.6875rem;line-height:1.5;letter-spacing:.03em;color:var(--ivory-56);white-space:nowrap}
+.ann-k{display:block;font-weight:500;color:var(--ivory);letter-spacing:.14em;text-transform:uppercase}
+.ann--l{right:calc(87.66% + 8px);padding-right:2.6rem;text-align:right}
+.ann--r{left:calc(87.66% + 8px);padding-left:2.6rem}
+.ann--l::after,.ann--r::after{content:"";position:absolute;top:.75em;width:2.1rem;height:1px;background:var(--hair-void-strong)}
+.ann--l::after{right:0}
+.ann--r::after{left:0}
+.ann--b{left:50%;top:calc(100% + 1.15rem);margin:0;transform:translateX(-50%);text-align:center}
+.ann-lead{position:absolute;left:50%;top:calc(60.96% + 9px);bottom:-.85rem;width:1px;background:var(--hair-void-strong)}
+
+/* ---- Prelude runway + beat markers ----------------------------------------- */
+.interlude{display:none}
+html.motion .interlude{display:block;height:var(--interlude)}
+.beat-mark{position:absolute;left:0;width:1px;height:1px;pointer-events:none}
+.beat-mark--open{top:60%}
+.beat-mark--wake{bottom:0}
+html.motion .beat-mark--open{top:auto;bottom:calc(var(--interlude) + 46svh)}
+html.motion .beat-mark--wake{bottom:calc(var(--interlude) - 5svh)}
+
+/* ---- Chambers: laid out about the central axis ----------------------------- */
+.chambers{position:relative;padding-top:clamp(4rem,10svh,7rem)}
+html.motion .chambers{padding-top:0}
+.chambers::before{content:"";position:absolute;top:0;bottom:0;left:var(--axis);width:1px;background:var(--hair-strong)}
+html.motion .chambers::before{display:none}
+.chamber{position:relative;padding-bottom:clamp(6.5rem,15svh,9.5rem)}
+.ch-grid{width:min(100% - 2 * var(--ch-inset),var(--content));margin-inline:auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:var(--gutter)}
+.ch-l{grid-column:1;justify-self:end;text-align:right;max-width:30rem}
+.ch-r{grid-column:2;max-width:var(--measure);padding-top:2.05rem}
+.ch-l .label{color:var(--void-72);margin-bottom:1.1rem}
+.ch-h2{font-family:var(--font-serif);font-size:clamp(2rem,3.4vw,2.75rem);font-weight:400;line-height:1.12;letter-spacing:-.03em;text-wrap:balance;font-optical-sizing:auto}
+.ch-r p{color:var(--charcoal);text-wrap:pretty}
+.ch-r p+p{margin-top:1.15em}
+.ch-r .meta{color:var(--void-72)}
+.ch-r p.meta{margin-top:1.1rem}
+.lib{letter-spacing:.02em}
+.lib b{font-weight:500;color:var(--void)}
+.text-link{color:var(--void)}
+.text-link:hover{text-decoration-thickness:2px}
+
+/* ---- Gates --------------------------------------------------------------- */
+.gate{position:relative;height:2.75rem;margin-bottom:6.5rem}
+.gate-bar{position:absolute;top:50%;width:5px;height:36px;margin-top:-18px;border-radius:3px;background:var(--void)}
+.gate-bar--l{left:calc(var(--axis) - 13px);transform:translate3d(-10px,0,0)}
+.gate-bar--r{left:calc(var(--axis) + 8px);transform:translate3d(10px,0,0)}
+html.motion .gate-bar{will-change:transform}
+.gate--mini .gate-bar{width:4px;height:24px;margin-top:-12px;border-radius:2px}
+.gate--mini .gate-bar--l{left:calc(var(--axis) - 12px)}
+.gate-num,.gate-cap{position:absolute;top:50%;transform:translateY(-50%);font-family:var(--font-mono);font-size:.6875rem;line-height:1.4;letter-spacing:.06em;white-space:nowrap}
+.gate-num{right:calc(100% - var(--axis) + 2.6rem);color:var(--void)}
+.gate-cap{left:calc(var(--axis) + 2.6rem);color:var(--void-72)}
+@media (max-width:1099px){.gate-cap{white-space:normal;width:max-content;max-width:calc(100% - var(--axis) - 2.6rem - 5rem)}}
+
+/* ---- Questions ------------------------------------------------------------ */
+.q-head .ch-r{padding-top:0;align-self:start}
+.q-head .ch-r p.meta{margin:0;line-height:1.4;font-size:.6875rem;letter-spacing:.06em}
+.q-head .ch-l .label{margin:0}
+.q-head{margin-bottom:5rem}
+.q-head .meta{color:var(--void-72)}
+.q-row{padding-bottom:3.5rem}
+.q-row .gate{margin-bottom:5.5rem}
+.q{grid-column:1;justify-self:end;text-align:right;max-width:22rem}
+.q-row--r .q{grid-column:2;justify-self:start;text-align:left}
+.q-num{color:var(--void-72)}
+.q-h{margin:.35rem 0 .6rem;font-family:var(--font-serif);font-size:clamp(1.6rem,2.4vw,1.95rem);font-weight:400;line-height:1.15;letter-spacing:-.025em}
+.q p:last-child{color:var(--charcoal);font-size:1rem}
+.q-more{padding-top:.5rem}
+.q-more .ch-r{padding-top:0}
+.q-more .text-link{margin-top:0}
+
+/* ---- Close: the mark re-forms ------------------------------------------- */
+.close{position:relative;display:flex;flex-direction:column;align-items:center;padding:6rem var(--page-pad) 4.5rem;text-align:center}
+html.motion .close{padding-top:16svh;padding-bottom:6.5rem}
+.close-mark{position:relative;margin:0;height:min(46svh,34rem);aspect-ratio:64/104}
+.close-word{margin-top:2.4rem;height:1.9rem;width:calc(1.9rem * 7.2 * .9116);overflow:clip}
+.close-word img{height:1.9rem;width:auto;max-width:none;margin-left:calc(-1.9rem * 7.2 * .0884)}
+.legend{margin-top:3rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.legend .label{color:var(--void-72)}
+.legend ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem 1.9rem;font-family:var(--font-mono);font-size:.75rem;color:var(--charcoal)}
+.legend li{display:inline-flex;align-items:center;gap:.6rem}
+.legend-note{font-family:var(--font-mono);font-size:.75rem;color:var(--void-72)}
+
+/* ---- Glyphs: the four marks a gate can leave ------------------------------ */
+.g{position:relative;flex:none;width:var(--glyph);height:var(--glyph);border-radius:50%;box-shadow:0 0 0 2px var(--ivory)}
+.g--observed,.g--superseded{background:var(--ivory);border:1.5px solid var(--void)}
+.g--accepted{background:var(--void)}
+.g--changed{background:var(--resonance)}
+.g--superseded::after{content:"";position:absolute;left:-3px;right:-3px;top:50%;height:1.5px;margin-top:-.75px;background:var(--void);transform:rotate(-45deg)}
+
+/* ---- Ledger: real links; static stack on the close mark, fixed on the rails in motion */
+.ledger{position:absolute;inset:0;pointer-events:none;z-index:3}
+.ledger ol{list-style:none;margin:0;padding:0;position:absolute;bottom:calc(10.1% + 14px - var(--pitch) / 2);display:flex;flex-direction:column-reverse}
+.ledger li{height:var(--pitch)}
+.ledger-l{left:calc(12.34% - 14px - var(--tw) + var(--glyph) / 2)}
+.ledger-r{left:calc(87.66% + 14px - var(--glyph) / 2)}
+.tick{display:flex;align-items:center;justify-content:flex-end;gap:.45rem;width:var(--tw);height:var(--pitch);pointer-events:auto;
+  font-family:var(--font-mono);font-size:.6875rem;letter-spacing:.03em;color:var(--void-72);text-decoration:none}
+.tick.is-cur{color:var(--void)}
+.ledger-r .tick{flex-direction:row-reverse}
+.tick:hover,.tick:focus-visible{color:var(--void)}
+.tick .g{transition:box-shadow .2s var(--ease-out,ease)}
+.tick:hover .g{box-shadow:0 0 0 2px var(--ivory),0 0 0 3.5px var(--void)}
+.tick:focus-visible{outline-offset:1px}
+html.motion .ledger{position:fixed;inset:0}
+html.motion .ledger ol{position:static;display:block}
+html.motion .ledger li{height:0}
+html.motion .tick{position:absolute;left:0;top:0;visibility:hidden;will-change:transform}
+
+/* ---- Footer ---------------------------------------------------------------- */
+.site-footer{position:relative;align-items:center}
+.site-footer a{display:inline-flex;align-items:center;min-height:2rem}
+.backed{display:inline-flex;align-items:center;gap:.6rem}
+.backed img{width:67px;height:30px}
+
+/* ---- Mobile: axis to the left, chambers stack, ledger on the left rail ---- */
+@media (min-width:700px) and (max-width:1199px){
+  .hero-mark{height:min(56svh,40rem)}
+  .ann{white-space:normal;width:6.4rem}
+  .ann--l{padding-right:1.5rem}
+  .ann--r{padding-left:1.5rem}
+  .ann--l::after,.ann--r::after{width:1.1rem}
+  .ann--b{width:auto;white-space:nowrap}
+}
+@media (min-width:700px) and (max-width:979px){
+  .hero{grid-template-columns:minmax(0,1fr);min-height:auto;padding-block:3.5rem 6rem;gap:0}
+  .hero-mark{height:min(46svh,30rem);margin-top:3.5rem}
+}
+@media (max-width:699px){
+  :root{--axis:28px;--pitch:44px;--tw:44px;--interlude:118svh}
+  .hero{grid-template-columns:minmax(0,1fr);min-height:auto;padding-block:2.75rem 5.5rem;gap:0}
+  .hero-mark{height:40svh;margin-top:3rem}
+  .ann{font-size:.625rem;letter-spacing:0;white-space:normal;width:5.2rem}
+  .ann-k{letter-spacing:.08em}
+  .ann--l{padding-right:1.35rem}
+  .ann--r{padding-left:1.35rem}
+  .ann--l::after,.ann--r::after{width:1rem}
+  .ann--b{width:auto;white-space:nowrap}
+  .ch-grid{width:auto;margin:0;padding:0 24px 0 52px;grid-template-columns:minmax(0,1fr)}
+  .ch-l,.ch-r,.q,.q-row--r .q{grid-column:1;justify-self:start;text-align:left;max-width:none}
+  .ch-r{padding-top:1.4rem}
+  .q-head .ch-r{padding-top:.6rem}
+  .q-head{margin-bottom:3.5rem}
+  .gate{margin-bottom:5.5rem}
+  .gate-bar{width:4px;height:28px;margin-top:-14px}
+  .gate-bar--l{left:calc(var(--axis) - 10px);transform:translate3d(-9px,0,0)}
+  .gate-bar--r{left:calc(var(--axis) + 6px);transform:translate3d(9px,0,0)}
+  .gate--mini .gate-bar--l{left:calc(var(--axis) - 10px)}
+  .gate-num{right:auto;left:52px}
+  .gate-cap{left:calc(52px + 3.3rem);white-space:normal;max-width:calc(100% - 52px - 3.3rem - 24px)}
+  .text-link,.site-footer a,.nav a,.site-header .logo{min-height:44px}
+  .text-link{display:inline-flex;align-items:center}
+  .close-mark{height:44svh}
+  .legend ul{flex-direction:column;align-items:flex-start;gap:.55rem}
+  html.motion .ledger .ledger-r{display:none}
+  .ledger-l{left:calc(12.34% - 14px - 13px)}
+  .tick{justify-content:flex-start;padding-left:4px}
+  .tick .num{display:none}
+}
+</style>
+</head>
+<body>
+<div class="dir-head" data-component="DirectionHead">
+  <span class="dir-eyebrow">Concept direction B</span>
+  <span>The Aperture</span>
+  <span>The page becomes the mark: two pillars frame every section, a bead travels the axis, and each gate inscribes the pillars.</span>
+  <a href="index.html" data-test-id="dir-back" data-component="Link" data-applicable-states="rest hover focus-visible">&larr; all directions</a>
+</div>
+<a class="skip-link" href="#main" data-test-id="skip-link">Skip to content</a>
+
+<header class="site-header site-header--void" data-component="SiteHeader">
+  <a class="logo" href="https://wakingmatter.com/" data-test-id="header-logo" data-component="Link" data-applicable-states="rest hover focus-visible"><img src="shared/assets/lockup-on-void.svg" alt="Waking Matter" width="159" height="22"></a>
+  <nav class="nav" aria-label="Primary" data-component="Nav">
+    <a href="https://wakingmatter.com/about/" data-test-id="nav-about" data-applicable-states="rest hover focus-visible">About</a>
+    <a href="https://wakingmatter.com/research/" data-test-id="nav-research" data-applicable-states="rest hover focus-visible">Research</a>
+    <a href="https://wakingmatter.com/notes/" data-test-id="nav-notes" data-applicable-states="rest hover focus-visible">Notes</a>
+    <a href="mailto:hello@wakingmatter.com" data-test-id="nav-contact" data-applicable-states="rest hover focus-visible">Contact</a>
+  </nav>
+</header>
+
+<!-- The frame: each layer holds a complete copy of rails, axis and bead in its own colourway. -->
+<div class="frame" aria-hidden="true" data-motion-purpose="continuity" data-component="Frame">
+  <div class="layer layer--void">
+    <svg class="fsvg" viewBox="0 0 1440 900" preserveAspectRatio="none" focusable="false">
+      <defs>
+        <linearGradient id="vL" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8e928f"/><stop offset=".58" stop-color="#8e928f"/><stop offset=".62" stop-color="#d6d9d7"/><stop offset="1" stop-color="#d6d9d7"/></linearGradient>
+        <linearGradient id="vR" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d6d9d7"/><stop offset=".38" stop-color="#d6d9d7"/><stop offset=".42" stop-color="#8e928f"/><stop offset="1" stop-color="#8e928f"/></linearGradient>
+        <radialGradient id="vB" cx="34%" cy="28%" r="72%"><stop offset="0" stop-color="#e2e4e1"/><stop offset=".36" stop-color="#3a3e3c"/><stop offset="1" stop-color="#1a1c1b"/></radialGradient>
+      </defs>
+      <line class="f-axis f-axis--void" x1="0" y1="0" x2="0" y2="0" stroke-width="1"/>
+      <rect class="f-l" fill="url(#vL)"/><rect class="f-r" fill="url(#vR)"/><circle class="f-b" fill="url(#vB)"/>
+    </svg>
+  </div>
+  <div class="layer layer--ivory" data-motion-purpose="brand-expression">
+    <svg class="fsvg" viewBox="0 0 1440 900" preserveAspectRatio="none" focusable="false">
+      <defs>
+        <linearGradient id="iL" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0a0a0a"/><stop offset=".58" stop-color="#0a0a0a"/><stop offset=".62" stop-color="#2a2a2a"/><stop offset="1" stop-color="#2a2a2a"/></linearGradient>
+        <linearGradient id="iR" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2a2a2a"/><stop offset=".38" stop-color="#2a2a2a"/><stop offset=".42" stop-color="#0a0a0a"/><stop offset="1" stop-color="#0a0a0a"/></linearGradient>
+        <radialGradient id="iB" cx="34%" cy="28%" r="72%"><stop offset="0" stop-color="#b8bcba"/><stop offset=".36" stop-color="#3a3e3c"/><stop offset="1" stop-color="#1a1c1b"/></radialGradient>
+      </defs>
+      <line class="f-axis f-axis--ivory" x1="0" y1="0" x2="0" y2="0" stroke-width="1"/>
+      <rect class="f-l" fill="url(#iL)"/><rect class="f-r" fill="url(#iR)"/><circle class="f-b" fill="url(#iB)"/>
+    </svg>
+  </div>
+  <svg class="ring" viewBox="0 0 1440 900" preserveAspectRatio="none" focusable="false" data-motion-purpose="brand-expression"><circle cx="0" cy="0" r="0" opacity="0"/></svg>
+  <svg class="darts" viewBox="0 0 1440 900" preserveAspectRatio="none" focusable="false" data-motion-purpose="feedback"></svg>
+</div>
+
+<main id="main" data-component="Page">
+  <div class="prelude">
+    <section class="hero" id="top" data-beat="hero" data-beat-label="Hero · the mark" data-component="Hero" aria-labelledby="h1">
+      <div class="hero-text" data-motion-purpose="continuity">
+        <div class="rise" data-motion-purpose="brand-expression">
+          <p class="label">Building systems for cumulative intelligence</p>
+          <h1 class="hero-h1" id="h1">Agents should improve with experience.</h1>
+          <p class="hero-deck">We build memory, provenance and evaluation infrastructure for agents working with changing information.</p>
+          <a class="hero-cta" href="#problem" data-test-id="hero-cta" data-component="Button" data-applicable-states="rest hover focus-visible">Explore the work <span aria-hidden="true">↓</span></a>
+        </div>
+      </div>
+      <figure class="hero-mark" data-component="BrandMark">
+        <svg class="mark-svg" viewBox="28 8 64 104" aria-hidden="true" focusable="false">
+          <defs>
+            <linearGradient id="hL" x1="35.9" y1="13" x2="46.9" y2="13" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#8e928f"/><stop offset=".58" stop-color="#8e928f"/><stop offset=".62" stop-color="#d6d9d7"/><stop offset="1" stop-color="#d6d9d7"/></linearGradient>
+            <linearGradient id="hR" x1="73.1" y1="13" x2="84.1" y2="13" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#d6d9d7"/><stop offset=".38" stop-color="#d6d9d7"/><stop offset=".42" stop-color="#8e928f"/><stop offset="1" stop-color="#8e928f"/></linearGradient>
+            <radialGradient id="hB" cx="34%" cy="28%" r="72%"><stop offset="0" stop-color="#e2e4e1"/><stop offset=".36" stop-color="#3a3e3c"/><stop offset="1" stop-color="#1a1c1b"/></radialGradient>
+          </defs>
+          <rect x="35.9" y="13" width="11" height="94" rx="5.5" fill="url(#hL)"/>
+          <rect x="73.1" y="13" width="11" height="94" rx="5.5" fill="url(#hR)"/>
+          <circle cx="60" cy="60" r="11.4" fill="url(#hB)"/>
+        </svg>
+        <figcaption class="annot" data-motion-purpose="continuity">
+          <span class="annot-in rise rise--late">
+            <span class="ann ann--l"><span class="ann-k">Provenance</span><span class="sr-only"> · </span>where it came from</span>
+            <span class="ann-lead" aria-hidden="true"></span>
+            <span class="ann ann--b"><span class="ann-k">Memory</span><span class="sr-only"> · </span>what is kept</span>
+            <span class="ann ann--r"><span class="ann-k">Evaluation</span><span class="sr-only"> · </span>whether it helped</span>
+          </span>
+        </figcaption>
+      </figure>
+    </section>
+    <div class="interlude" aria-hidden="true"></div>
+    <div class="beat-mark beat-mark--open" data-beat="open" data-beat-label="The mark opens" aria-hidden="true"></div>
+    <div class="beat-mark beat-mark--wake" data-beat="wake" data-beat-label="Wake · the iris" aria-hidden="true"></div>
+  </div>
+
+  <div class="chambers">
+    <section class="chamber" id="problem" data-beat="problem" data-beat-label="The problem · gate 01" data-component="Chamber" aria-labelledby="h-problem">
+      <div class="gate" data-gate="01" data-motion-purpose="guidance" data-component="Gate">
+        <span class="gate-bar gate-bar--l" aria-hidden="true"></span><span class="gate-bar gate-bar--r" aria-hidden="true"></span>
+        <span class="gate-num">01</span><span class="gate-cap">observed · no decision recorded</span>
+      </div>
+      <div class="ch-grid">
+        <div class="ch-l"><p class="label">The problem</p><h2 class="ch-h2" id="h-problem">Memory is not enough.</h2></div>
+        <div class="ch-r">
+          <p>A stored answer can be outdated. A successful procedure can fail when the task changes. Keeping more history does not tell an agent what to trust or do next.</p>
+          <p>The challenge is to connect retained experience to decisions, and to notice when the past has become a liability.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="chamber" id="contract" data-beat="contract" data-beat-label="Agent Memory Contracts · gate 02" data-component="Chamber" aria-labelledby="h-contract">
+      <div class="gate" data-gate="02" data-motion-purpose="guidance" data-component="Gate">
+        <span class="gate-bar gate-bar--l" aria-hidden="true"></span><span class="gate-bar gate-bar--r" aria-hidden="true"></span>
+        <span class="gate-num">02</span><span class="gate-cap">accepted · decision recorded</span>
+      </div>
+      <div class="ch-grid">
+        <div class="ch-l"><p class="label">Public technical work</p><h2 class="ch-h2" id="h-contract">Agent Memory Contracts</h2></div>
+        <div class="ch-r">
+          <p>An agent’s interpretation should not silently become a fact. Agent Memory Contracts is a public Python library for making that boundary explicit.</p>
+          <p>Source evidence stays linked to a candidate claim. Accepting the claim requires a recorded decision, and the validator rejects a trusted record without the required authorization. The worked reducer example shows acceptance, rejection and an invalid promotion.</p>
+          <p class="meta lib"><b>cand_</b> candidate → <b>dec_</b> decision → <b>fact_</b> trusted</p>
+          <div class="work-links">
+            <a class="text-link" href="https://github.com/avs-io/agent-memory-contracts" rel="noopener" data-test-id="link-code" data-component="Link" data-applicable-states="rest hover focus-visible">Inspect the code and tests ↗</a>
+            <a class="text-link" href="https://github.com/avs-io/agent-memory-contracts/blob/main/examples/reference_reducer.py" rel="noopener" data-test-id="link-example" data-component="Link" data-applicable-states="rest hover focus-visible">Run the worked example ↗</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chamber" id="questions" data-beat="questions" data-beat-label="Four questions · gate 03" data-component="Chamber" aria-labelledby="h-questions">
+      <div class="gate" data-gate="03" data-motion-purpose="guidance" data-component="Gate">
+        <span class="gate-bar gate-bar--l" aria-hidden="true"></span><span class="gate-bar gate-bar--r" aria-hidden="true"></span>
+        <span class="gate-num">03</span><span class="gate-cap">research questions, not results</span>
+      </div>
+      <div class="ch-grid q-head">
+        <div class="ch-l"><h2 class="label" id="h-questions">What we are investigating</h2></div>
+        <div class="ch-r"><p class="meta">01 / 04</p></div>
+      </div>
+      <div class="q-row q-row--l" id="q-decisions">
+        <div class="gate gate--mini" data-gate="03.1" data-motion-purpose="guidance" data-component="Gate">
+          <span class="gate-bar gate-bar--l" aria-hidden="true"></span><span class="gate-bar gate-bar--r" aria-hidden="true"></span>
+          <span class="gate-num">03·1</span><span class="gate-cap">observed</span>
+        </div>
+        <div class="ch-grid"><div class="q"><p class="meta q-num">01</p><h3 class="q-h">Decisions</h3><p>When should a previous outcome change the next search, test or action?</p></div></div>
+      </div>
+      <div class="q-row q-row--r" id="q-state">
+        <div class="gate gate--mini" data-gate="03.2" data-motion-purpose="guidance" data-component="Gate">
+          <span class="gate-bar gate-bar--l" aria-hidden="true"></span><span class="gate-bar gate-bar--r" aria-hidden="true"></span>
+          <span class="gate-num">03·2</span><span class="gate-cap">observed</span>
+        </div>
+        <div class="ch-grid"><div class="q"><p class="meta q-num">02</p><h3 class="q-h">Useful state</h3><p>Which facts, procedures and failed attempts deserve to persist, and with what source and scope?</p></div></div>
+      </div>
+      <div class="q-row q-row--l" id="q-revision">
+        <div class="gate gate--mini" data-gate="03.3" data-motion-purpose="guidance" data-component="Gate">
+          <span class="gate-bar gate-bar--l" aria-hidden="true"></span><span class="gate-bar gate-bar--r" aria-hidden="true"></span>
+          <span class="gate-num">03·3</span><span class="gate-cap">superseded · linked, not deleted</span>
+        </div>
+        <div class="ch-grid"><div class="q"><p class="meta q-num">03</p><h3 class="q-h">Revision</h3><p>How should a system detect stale knowledge and decide what to revise or reset?</p></div></div>
+      </div>
+      <div class="q-row q-row--r" id="q-evaluation">
+        <div class="gate gate--mini" data-gate="03.4" data-motion-purpose="guidance" data-component="Gate">
+          <span class="gate-bar gate-bar--l" aria-hidden="true"></span><span class="gate-bar gate-bar--r" aria-hidden="true"></span>
+          <span class="gate-num">03·4</span><span class="gate-cap">observed</span>
+        </div>
+        <div class="ch-grid"><div class="q"><p class="meta q-num">04</p><h3 class="q-h">Evaluation</h3><p>Does retained experience improve results when context, compute and prior advice are accounted for?</p></div></div>
+      </div>
+      <div class="ch-grid q-more">
+        <div class="ch-r"><a class="text-link" href="https://wakingmatter.com/research/" data-test-id="link-research" data-component="Link" data-applicable-states="rest hover focus-visible">Explore the research questions →</a></div>
+      </div>
+    </section>
+
+    <section class="chamber" id="repeated" data-beat="repeated" data-beat-label="Repeated work · gate 04" data-component="Chamber" aria-labelledby="h-repeated">
+      <div class="gate" data-gate="04" data-motion-purpose="guidance" data-component="Gate">
+        <span class="gate-bar gate-bar--l" aria-hidden="true"></span><span class="gate-bar gate-bar--r" aria-hidden="true"></span>
+        <span class="gate-num">04</span><span class="gate-cap">where experience should change a later decision</span>
+      </div>
+      <div class="ch-grid">
+        <div class="ch-l"><p class="label">Repeated work</p><h2 class="ch-h2" id="h-repeated">Bring a problem that keeps coming back.</h2></div>
+        <div class="ch-r">
+          <p>Does an agent reconstruct the same context every week, repeat a known mistake or fail when a fact changes? We want to work on recurring workflows where the result can be checked and a person can intervene.</p>
+          <a class="text-link" href="mailto:hello@wakingmatter.com" data-test-id="link-workflow" data-component="Link" data-applicable-states="rest hover focus-visible">Tell us about your workflow →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="chamber" id="thesis" data-beat="thesis" data-beat-label="Thesis · gate 05" data-component="Chamber" aria-labelledby="h-thesis">
+      <div class="gate" data-gate="05" data-motion-purpose="guidance" data-component="Gate">
+        <span class="gate-bar gate-bar--l" aria-hidden="true"></span><span class="gate-bar gate-bar--r" aria-hidden="true"></span>
+        <span class="gate-num">05</span><span class="gate-cap">accepted · decision recorded</span>
+      </div>
+      <div class="ch-grid">
+        <div class="ch-l"><p class="label">The broader thesis</p><h2 class="ch-h2" id="h-thesis">Intelligence should accumulate.</h2></div>
+        <div class="ch-r">
+          <p>Learning costs time, attention and failed attempts. The essay asks what should survive that investment, how it can pass between systems and when it should lose authority.</p>
+          <p class="meta">2026-09-15 · Updated 2026-10-16</p>
+          <a class="text-link" href="https://wakingmatter.com/notes/intelligence-should-accumulate/" data-test-id="link-essay" data-component="Link" data-applicable-states="rest hover focus-visible">Read the essay →</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="close" id="close" data-beat="close" data-beat-label="Close · the mark re-forms" data-component="Close" aria-labelledby="h-ledger">
+    <figure class="close-mark" data-component="BrandMark">
+      <svg class="mark-svg" viewBox="28 8 64 104" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="cL" x1="35.9" y1="13" x2="46.9" y2="13" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#0a0a0a"/><stop offset=".58" stop-color="#0a0a0a"/><stop offset=".62" stop-color="#2a2a2a"/><stop offset="1" stop-color="#2a2a2a"/></linearGradient>
+          <linearGradient id="cR" x1="73.1" y1="13" x2="84.1" y2="13" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#2a2a2a"/><stop offset=".38" stop-color="#2a2a2a"/><stop offset=".42" stop-color="#0a0a0a"/><stop offset="1" stop-color="#0a0a0a"/></linearGradient>
+          <radialGradient id="cB" cx="34%" cy="28%" r="72%"><stop offset="0" stop-color="#b8bcba"/><stop offset=".36" stop-color="#3a3e3c"/><stop offset="1" stop-color="#1a1c1b"/></radialGradient>
+        </defs>
+        <rect x="35.9" y="13" width="11" height="94" rx="5.5" fill="url(#cL)"/>
+        <rect x="73.1" y="13" width="11" height="94" rx="5.5" fill="url(#cR)"/>
+        <circle cx="60" cy="60" r="11.4" fill="url(#cB)"/>
+      </svg>
+      <nav class="ledger" aria-label="Ledger" data-component="Ledger" data-motion-purpose="feedback">
+        <ol class="ledger-l">
+          <li><a class="tick" href="#problem" data-gate="01" aria-label="Go to The problem" title="The problem" data-test-id="tick-01" data-component="Link" data-applicable-states="rest hover focus-visible"><span class="num">01</span><span class="g g--observed"></span></a></li>
+          <li><a class="tick" href="#contract" data-gate="02" aria-label="Go to Agent Memory Contracts" title="Agent Memory Contracts" data-test-id="tick-02" data-component="Link" data-applicable-states="rest hover focus-visible"><span class="num">02</span><span class="g g--accepted"></span></a></li>
+          <li><a class="tick" href="#q-decisions" data-gate="03.1" aria-label="Go to Decisions" title="Decisions" data-test-id="tick-03-1" data-component="Link" data-applicable-states="rest hover focus-visible"><span class="num">03·1</span><span class="g g--observed"></span></a></li>
+          <li><a class="tick" href="#q-state" data-gate="03.2" aria-label="Go to Useful state" title="Useful state" data-test-id="tick-03-2" data-component="Link" data-applicable-states="rest hover focus-visible"><span class="num">03·2</span><span class="g g--observed"></span></a></li>
+          <li><a class="tick" href="#q-revision" data-gate="03.3" aria-label="Go to Revision" title="Revision" data-test-id="tick-03-3" data-component="Link" data-applicable-states="rest hover focus-visible"><span class="num">03·3</span><span class="g g--superseded"></span></a></li>
+          <li><a class="tick" href="#q-evaluation" data-gate="03.4" aria-label="Go to Evaluation" title="Evaluation" data-test-id="tick-03-4" data-component="Link" data-applicable-states="rest hover focus-visible"><span class="num">03·4</span><span class="g g--observed"></span></a></li>
+          <li><a class="tick" href="#repeated" data-gate="04" aria-label="Go to Repeated work" title="Repeated work" data-test-id="tick-04" data-component="Link" data-applicable-states="rest hover focus-visible"><span class="num">04</span><span class="g g--changed"></span></a></li>
+          <li><a class="tick" href="#thesis" data-gate="05" aria-label="Go to The broader thesis" title="The broader thesis" data-test-id="tick-05" data-component="Link" data-applicable-states="rest hover focus-visible"><span class="num">05</span><span class="g g--accepted"></span></a></li>
+        </ol>
+        <ol class="ledger-r" aria-hidden="true">
+          <li><a class="tick" href="#problem" data-gate="01" tabindex="-1" title="The problem" data-test-id="tick-01-mirror"><span class="num">01</span><span class="g g--observed"></span></a></li>
+          <li><a class="tick" href="#contract" data-gate="02" tabindex="-1" title="Agent Memory Contracts" data-test-id="tick-02-mirror"><span class="num">02</span><span class="g g--accepted"></span></a></li>
+          <li><a class="tick" href="#q-decisions" data-gate="03.1" tabindex="-1" title="Decisions" data-test-id="tick-03-1-mirror"><span class="num">03·1</span><span class="g g--observed"></span></a></li>
+          <li><a class="tick" href="#q-state" data-gate="03.2" tabindex="-1" title="Useful state" data-test-id="tick-03-2-mirror"><span class="num">03·2</span><span class="g g--observed"></span></a></li>
+          <li><a class="tick" href="#q-revision" data-gate="03.3" tabindex="-1" title="Revision" data-test-id="tick-03-3-mirror"><span class="num">03·3</span><span class="g g--superseded"></span></a></li>
+          <li><a class="tick" href="#q-evaluation" data-gate="03.4" tabindex="-1" title="Evaluation" data-test-id="tick-03-4-mirror"><span class="num">03·4</span><span class="g g--observed"></span></a></li>
+          <li><a class="tick" href="#repeated" data-gate="04" tabindex="-1" title="Repeated work" data-test-id="tick-04-mirror"><span class="num">04</span><span class="g g--changed"></span></a></li>
+          <li><a class="tick" href="#thesis" data-gate="05" tabindex="-1" title="The broader thesis" data-test-id="tick-05-mirror"><span class="num">05</span><span class="g g--accepted"></span></a></li>
+        </ol>
+      </nav>
+    </figure>
+    <div class="close-word" data-motion-purpose="continuity"><img src="shared/assets/lockup-on-ivory.svg" alt="Waking Matter" width="219" height="30"></div>
+    <div class="legend" data-component="Legend">
+      <h2 class="label" id="h-ledger">Ledger</h2>
+      <ul>
+        <li><span class="g g--observed" aria-hidden="true"></span>observed</li>
+        <li><span class="g g--accepted" aria-hidden="true"></span>accepted · decision recorded</li>
+        <li><span class="g g--superseded" aria-hidden="true"></span>superseded</li>
+        <li><span class="g g--changed" aria-hidden="true"></span>changed a later decision</li>
+      </ul>
+      <p class="legend-note">Each gate you pass leaves a mark on the pillars.</p>
+    </div>
+  </section>
+
+  <footer class="site-footer" data-component="SiteFooter">
+    <p><a href="https://wakingmatter.com/" data-test-id="footer-home" data-applicable-states="rest hover focus-visible">wakingmatter.com</a></p>
+    <p>Building systems for cumulative intelligence.</p>
+    <p><a href="https://avsingh.com/writing/the-million-tendril-problem/" rel="noopener" data-test-id="footer-founder" data-applicable-states="rest hover focus-visible">From the founder</a></p>
+    <p><a href="mailto:hello@wakingmatter.com" data-test-id="footer-email" data-applicable-states="rest hover focus-visible">hello@wakingmatter.com</a></p>
+    <p><a href="https://www.linkedin.com/company/wakingmatter/" target="_blank" rel="noopener" data-test-id="footer-linkedin" data-applicable-states="rest hover focus-visible">LinkedIn<span class="sr-only"> (opens in a new tab)</span></a></p>
+    <p class="backed">Backed by <a href="https://e2b.dev" rel="noopener" data-test-id="footer-e2b" data-applicable-states="rest hover focus-visible"><img src="shared/assets/e2b.svg" alt="E2B" width="67" height="30"></a> for Startups</p>
+  </footer>
+</main>
+
+<footer data-brainstorm-meta>
+  <span data-direction-label>B</span> <span data-direction-name>The Aperture</span> <span data-fluent-components>none (marketing site)</span> <a href="index.html" data-test-id="meta-back">back to the directions</a>
+</footer>
+
+<script src="shared/dir.js"></script>
+<script>
+(function () {
+  'use strict';
+  var WM = window.WM, root = document.documentElement;
+  var lerp = WM.lerp, inv = WM.invLerp, clamp = WM.clamp, eio = WM.easeInOut, eo = WM.easeOut;
+  var NS = 'http://www.w3.org/2000/svg';
+  var VBX = 28, VBY = 8, VBW = 64;
+  function q(s, c) { return (c || document).querySelector(s); }
+  function qa(s, c) { return [].slice.call((c || document).querySelectorAll(s)); }
+
+  // cached writes: only touch the DOM when a value changes
+  function css(el, p, v) { var c = el._c || (el._c = {}); if (c[p] !== v) { c[p] = v; el.style[p] = v; } }
+  function at(el, n, v) { var c = el._a || (el._a = {}); if (c[n] !== v) { c[n] = v; el.setAttribute(n, v); } }
+  function f1(n) { return (Math.round(n * 10) / 10).toString(); }
+
+  var heroSec = q('.hero'), heroFig = q('.hero-mark'), heroText = q('.hero-text'), annot = q('.annot');
+  var closeSec = q('.close'), closeFig = q('.close-mark'), word = q('.close-word'), firstCh = q('#problem');
+  var voidLayer = q('.layer--void'), ivoryLayer = q('.layer--ivory');
+  var ringSvg = q('.ring'), ring = q('.ring circle'), darts = q('.darts');
+  var openMark = q('.beat-mark--open'), wakeMark = q('.beat-mark--wake');
+  var frames = qa('.fsvg').map(function (s) { return { s: s, L: q('.f-l', s), R: q('.f-r', s), B: q('.f-b', s), A: q('.f-axis', s) }; });
+
+  var tHero = WM.track(heroSec), tHeroFig = WM.track(heroFig), tClose = WM.track(closeFig), tCloseSec = WM.track(closeSec);
+  var tFirst = WM.track(firstCh), tOpen = WM.track(openMark), tWake = WM.track(wakeMark), tLast = WM.track(q('#thesis .ch-grid'));
+
+  var gates = qa('.gate').map(function (el) {
+    return { el: el, id: el.getAttribute('data-gate'), t: WM.track(el), l: q('.gate-bar--l', el), r: q('.gate-bar--r', el) };
+  });
+  var gateById = {};
+  gates.forEach(function (g) { gateById[g.id] = g; });
+  function line() { var l = document.createElementNS(NS, 'line'); l.setAttribute('opacity', '0'); darts.appendChild(l); return l; }
+  var ticks = qa('.ledger-l .tick').map(function (a, k) {
+    var id = a.getAttribute('data-gate'), m = q('.ledger-r .tick[data-gate="' + id + '"]');
+    return { k: k, g: gateById[id], a: a, m: m, n: q('.num', a), mn: q('.num', m), dl: line(), dr: line() };
+  });
+
+  var M = {};
+  function metrics() {
+    var cw = root.clientWidth, vh = window.innerHeight, mob = cw < 700;
+    M.cw = cw; M.vh = vh; M.mob = mob;
+    M.rw = mob ? 6 : 9;
+    M.inset = mob ? 10 : clamp(cw * 0.04, 44, 64);
+    M.top = mob ? 12 : 16;
+    M.ax = mob ? 28 : cw / 2;
+    M.by = vh * 0.42;
+    M.br = mob ? 9 : 13;
+    M.pitch = mob ? 44 : 32;
+    M.tw = mob ? 44 : 60;
+    M.g = 18;
+    M.open = mob ? 9 : 10;
+    var vb = '0 0 ' + cw + ' ' + vh;
+    frames.forEach(function (f) { at(f.s, 'viewBox', vb); });
+    at(ringSvg, 'viewBox', vb); at(darts, 'viewBox', vb);
+  }
+
+  function markG(t, off) {
+    var k = t.width / VBW, ox = t.left, oy = t.top - off;
+    return {
+      L: { x: ox + (35.9 - VBX) * k, y: oy + (13 - VBY) * k, w: 11 * k, h: 94 * k },
+      R: { x: ox + (73.1 - VBX) * k, y: oy + (13 - VBY) * k, w: 11 * k, h: 94 * k },
+      B: { x: ox + (60 - VBX) * k, y: oy + (60 - VBY) * k, r: 11.4 * k }
+    };
+  }
+  function railsG() {
+    var h = M.vh - 2 * M.top;
+    return {
+      L: { x: M.inset, y: M.top, w: M.rw, h: h },
+      R: { x: M.cw - M.inset - M.rw, y: M.top, w: M.rw, h: h },
+      B: { x: M.ax, y: M.by, r: M.br }
+    };
+  }
+  function lr(a, b, s, sx) { return { x: lerp(a.x, b.x, sx), y: lerp(a.y, b.y, s), w: lerp(a.w, b.w, s), h: lerp(a.h, b.h, s) }; }
+  function blend(a, b, s, sx) {
+    return { L: lr(a.L, b.L, s, sx), R: lr(a.R, b.R, s, sx), B: { x: lerp(a.B.x, b.B.x, sx), y: lerp(a.B.y, b.B.y, s), r: lerp(a.B.r, b.B.r, s) } };
+  }
+  function rect(el, g) { at(el, 'x', f1(g.x)); at(el, 'y', f1(g.y)); at(el, 'width', f1(g.w)); at(el, 'height', f1(g.h)); at(el, 'rx', f1(g.w / 2)); }
+
+  // scroll windows (document px), recomputed each frame from cached measurements
+  function windows() {
+    var vh = M.vh, W = {};
+    var kH = tHeroFig.width / VBW;
+    W.follow = Math.max(0, tHeroFig.top + (60 - VBY) * kH - M.by);
+    W.hb = tHero.top + tHero.height;
+    W.oS = Math.max(0, W.follow - 0.3 * vh);
+    W.oE = Math.max(W.oS + 0.3 * vh, W.hb - (M.mob ? 0.3 : 0.43) * vh);
+    W.iS = W.oE - 0.05 * vh;
+    W.iE = Math.max(W.iS + 0.3 * vh, tFirst.top - 1.05 * vh);
+    var kC = tClose.width / VBW;
+    W.cE = tClose.top + (60 - VBY) * kC - M.by;
+    // the rails start gliding as the thesis copy clears the top of the viewport
+    W.cS = Math.min(W.cE - 0.36 * vh, Math.max(W.cE - 0.62 * vh, tLast.top + tLast.height - 0.32 * vh));
+    return W;
+  }
+
+  var motion = false;
+
+  function render(st) {
+    if (!motion) return;
+    var y = st.y, vh = M.vh;
+    if (st.vh !== M.vh || root.clientWidth !== M.cw) { metrics(); vh = M.vh; }
+    var W = windows();
+
+    // 1. open: the hero mark becomes the frame
+    var p = inv(W.oS, W.oE, y);
+    var H0 = markG(tHeroFig, Math.min(y, W.follow)), R0 = railsG();
+    var F = blend(H0, R0, eio(p), eio(inv(0.12, 1, p)));
+    if (!M.mob) F.B.x = lerp(H0.B.x, R0.B.x, eio(p));
+    // 6. close: the rails glide back and re-form the mark around the bead
+    var c = eio(inv(W.cS, W.cE, y));
+    if (c > 0) F = blend(F, markG(tClose, Math.max(y, W.cE)), c, c);
+
+    var ax = Math.round(M.ax) + 0.5, a = inv(0.8, 1, p) * (1 - c);
+    frames.forEach(function (f) {
+      rect(f.L, F.L); rect(f.R, F.R);
+      at(f.B, 'cx', f1(F.B.x)); at(f.B, 'cy', f1(F.B.y)); at(f.B, 'r', f1(F.B.r));
+      at(f.A, 'x1', ax); at(f.A, 'x2', ax);
+      at(f.A, 'y1', f1(M.by - a * M.by)); at(f.A, 'y2', f1(M.by + a * (vh - M.by)));
+      at(f.A, 'opacity', a > 0 ? '1' : '0');
+    });
+
+    // hero text drifts up and fades; annotations leave as the mark detaches
+    var tf = inv(0.03 * vh, Math.max(0.3 * vh, W.oS + 0.18 * vh), y);
+    css(heroText, 'opacity', (1 - tf).toFixed(3));
+    css(heroText, 'transform', 'translate3d(0,' + f1(-y * 0.18) + 'px,0)');
+    css(heroText, 'visibility', tf >= 1 ? 'hidden' : 'visible');
+    var af = inv(W.oS, W.oS + 0.14 * vh, y);
+    css(annot, 'opacity', (1 - af).toFixed(3));
+    css(annot, 'visibility', af >= 1 ? 'hidden' : 'visible');
+
+    // 3. wake: the iris opens from the bead; one resonance ring rides its edge
+    var iq = inv(W.iS, W.iE, y);
+    var Rmax = Math.hypot(Math.max(F.B.x, M.cw - F.B.x), Math.max(F.B.y, vh - F.B.y)) + 4;
+    // near-linear radius so the iris keeps visibly growing through the whole interlude
+    var R = lerp(F.B.r * 0.9, Rmax, 0.65 * iq + 0.35 * eio(iq));
+    css(ivoryLayer, 'visibility', iq > 0 ? 'visible' : 'hidden');
+    css(ivoryLayer, 'clipPath', iq >= 1 ? 'none' : 'circle(' + f1(R) + 'px at ' + f1(F.B.x) + 'px ' + f1(F.B.y) + 'px)');
+    css(voidLayer, 'visibility', iq >= 1 ? 'hidden' : 'visible');
+    var ro = iq > 0 && iq < 1 ? Math.min(inv(0, 0.04, iq), 1 - inv(0.78, 1, iq)) : 0;
+    at(ring, 'opacity', ro.toFixed(3)); at(ring, 'r', f1(R)); at(ring, 'cx', f1(F.B.x)); at(ring, 'cy', f1(F.B.y));
+    var ground = iq >= 1 ? 'ivory' : 'void';
+    if (root.dataset.ground !== ground) root.dataset.ground = ground;
+
+    // 5. gates open as they cross the bead and stay open once passed
+    gates.forEach(function (g) {
+      var d = M.by - (g.t.top + g.t.height / 2 - y);
+      var o = f1(M.open * WM.smooth(inv(-0.09 * vh, -0.03 * vh, d)));
+      css(g.l, 'transform', 'translate3d(-' + o + 'px,0,0)');
+      css(g.r, 'transform', 'translate3d(' + o + 'px,0,0)');
+    });
+
+    // ...and inscribe a mark that darts from the bead to the rails and settles in the ledger
+    var L = F.L, Rr = F.R, padB = L.w / 2 + 14;
+    var pitch = Math.min(M.pitch, (L.h * 0.85 - padB) / 7);
+    // on the rails the marks sit on the pillar; as the mark re-forms they step to its outer side
+    var gxL = lerp(L.x + L.w / 2, L.x - 14, c), gxR = lerp(Rr.x + Rr.w / 2, Rr.x + Rr.w + 14, c), bx = F.B.x, br = F.B.r;
+    var cur = -1;
+    if (c < 0.5) ticks.forEach(function (t) { if (M.by - (t.g.t.top + t.g.t.height / 2 - y) > 0.03 * vh) cur = t.k; });
+    ticks.forEach(function (t) {
+      var d = M.by - (t.g.t.top + t.g.t.height / 2 - y);
+      var on = d > 0.03 * vh;
+      css(t.a, 'visibility', on ? 'visible' : 'hidden');
+      if (!M.mob) css(t.m, 'visibility', on ? 'visible' : 'hidden');
+      if (!on) { at(t.dl, 'opacity', '0'); at(t.dr, 'opacity', '0'); return; }
+      var t1 = inv(0.03 * vh, 0.1 * vh, d), t2 = inv(0.1 * vh, 0.22 * vh, d);
+      var e1 = eo(t1), e2 = eio(t2);
+      var slot = L.y + L.h - padB - t.k * pitch;
+      var yy = lerp(M.by, slot, e2), xl = lerp(bx, gxL, e1), xr = lerp(bx, gxR, e1);
+      var ty = Math.round(yy - M.pitch / 2);
+      if (t.cur !== (t.k === cur)) { t.cur = t.k === cur; t.a.classList.toggle('is-cur', t.cur); t.m.classList.toggle('is-cur', t.cur); }
+      var op = inv(0, 0.3, t1).toFixed(3), no = inv(0.6, 1, t2).toFixed(3);
+      css(t.a, 'transform', 'translate3d(' + Math.round(M.mob ? xl - 13 : xl - M.tw + M.g / 2) + 'px,' + ty + 'px,0)');
+      css(t.a, 'opacity', op); css(t.n, 'opacity', no);
+      var dv = t2 < 1 ? '1' : '0';
+      at(t.dl, 'opacity', dv); at(t.dl, 'y1', f1(M.by)); at(t.dl, 'y2', f1(M.by));
+      at(t.dl, 'x1', f1(lerp(bx - br, gxL, e2))); at(t.dl, 'x2', f1(xl));
+      if (M.mob) { at(t.dr, 'opacity', '0'); return; }
+      css(t.m, 'transform', 'translate3d(' + Math.round(xr - M.g / 2) + 'px,' + ty + 'px,0)');
+      css(t.m, 'opacity', op); css(t.mn, 'opacity', no);
+      at(t.dr, 'opacity', dv); at(t.dr, 'y1', f1(M.by)); at(t.dr, 'y2', f1(M.by));
+      at(t.dr, 'x1', f1(lerp(bx + br, gxR, e2))); at(t.dr, 'x2', f1(xr));
+    });
+
+    css(word, 'opacity', c.toFixed(3));
+
+    // review wrapper: land each prelude beat mid-transition
+    at(openMark, 'data-beat-offset', String(Math.round((W.oS + W.oE) / 2 - tOpen.top)));
+    at(wakeMark, 'data-beat-offset', String(Math.round((W.iS + W.iE) / 2 - tWake.top)));
+    at(closeSec, 'data-beat-offset', String(Math.round(W.cE - tCloseSec.top)));
+  }
+
+  function clearInline(el) { el.removeAttribute('style'); el._c = {}; }
+  function setMotion(on) {
+    motion = on;
+    root.classList.toggle('motion', on);
+    if (!on) {
+      [heroText, annot, word, voidLayer, ivoryLayer].forEach(clearInline);
+      gates.forEach(function (g) { clearInline(g.l); clearInline(g.r); });
+      ticks.forEach(function (t) { [t.a, t.m, t.n, t.mn].forEach(clearInline); t.a.classList.remove('is-cur'); t.m.classList.remove('is-cur'); t.cur = false; });
+      [openMark, wakeMark, closeSec].forEach(function (el) { el.removeAttribute('data-beat-offset'); el._a = {}; });
+      root.dataset.ground = 'void';
+    } else {
+      metrics();
+      WM.invalidate();
+    }
+  }
+
+  metrics();
+  window.addEventListener('resize', function () { metrics(); WM.invalidate(); });
+  WM.onReduced(function (r) { setMotion(!r); });
+  if (motion && (window.scrollY || 0) < 4) {
+    root.classList.add('entering');
+    setTimeout(function () { root.classList.remove('entering'); }, 1300);
+  }
+  WM.frame(render);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+/* ==========================================================================
+   Waking Matter — shared tokens + brand components
+   Single source of truth for index.html and direction-{A,B,C}.html.
+
+   Brand values are copied from wakingmatter.com (:root, verified 2026-11-20).
+   Nothing here introduces a new brand hue: every colour below is a brand
+   colour, an alpha of one, or the site's own derived tint (#eceae4, #3d5c59).
+   The wrapper (index.html) has its own review-chrome section at the bottom.
+   ========================================================================== */
+
+/* ---- Fonts: the site's own self-hosted files (Latin subset) ------------- */
+@font-face{font-family:"Newsreader Variable";font-style:normal;font-weight:200 800;font-display:swap;
+  src:url(fonts/newsreader-latin-normal.woff2) format("woff2-variations");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Newsreader Variable";font-style:italic;font-weight:200 800;font-display:swap;
+  src:url(fonts/newsreader-latin-italic.woff2) format("woff2-variations");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Inter Variable";font-style:normal;font-weight:100 900;font-display:swap;
+  src:url(fonts/inter-latin-variable.woff2) format("woff2-variations");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/plexmono-latin-400.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/plexmono-latin-500.woff2) format("woff2")}
+
+:root{
+  /* ---- Brand (verbatim from live :root) -------------------------------- */
+  --void:#0a0a0a;
+  --charcoal:#2a2a2a;
+  --ivory:#f7f6f3;
+  --resonance:#5c8f8a;          /* reserved: the moment retained experience changes a later decision */
+  --mist:#d6d9d7;
+  --hair:rgba(10,10,10,.12);
+  --hair-void:rgba(247,246,243,.14);
+  --font-serif:"Newsreader Variable",Newsreader,"Iowan Old Style",Palatino,"Times New Roman",serif;
+  --font-sans:"Inter Variable",Inter,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,"Cascadia Code",monospace;
+  --page-pad:clamp(1.25rem,5vw,4.5rem);
+  --content:72rem;
+  --measure:38em;
+  --header-h:4.5rem;
+  --ease:cubic-bezier(.16,1,.3,1);
+
+  /* ---- Derived neutrals (alpha of brand colours only) ------------------ */
+  --ivory-72:rgba(247,246,243,.72);
+  --ivory-56:rgba(247,246,243,.56);
+  --ivory-32:rgba(247,246,243,.32);
+  --ivory-20:rgba(247,246,243,.20);
+  --void-72:rgba(10,10,10,.72);
+  --void-56:rgba(10,10,10,.56);
+  --void-32:rgba(10,10,10,.32);
+  --void-20:rgba(10,10,10,.20);
+  --hair-strong:rgba(10,10,10,.28);
+  --hair-void-strong:rgba(247,246,243,.32);
+  --resonance-ink:#3d5c59;      /* the site's own code-keyword tone: resonance legible as text on ivory */
+  --resonance-wash:rgba(92,143,138,.12);
+  --paper-tint:#eceae4;         /* the site's own code-block tint */
+
+  /* ---- The mark: values from the live lockup SVGs ---------------------- */
+  --mark-void-a:#8e928f;  --mark-void-b:#d6d9d7;   /* pillar halves on void  */
+  --mark-ivory-a:#0a0a0a; --mark-ivory-b:#2a2a2a;  /* pillar halves on ivory */
+  --bead-void-0:#e2e4e1;  --bead-ivory-0:#b8bcba;  /* bead highlight         */
+  --bead-1:#3a3e3c;       --bead-2:#1a1c1b;        /* bead mid / edge        */
+
+  /* ---- Motion ----------------------------------------------------------- */
+  --ease-inout:cubic-bezier(.65,0,.35,1);
+  --dur-rise:.9s;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+html,body{margin:0;min-height:100%}
+body{font-family:var(--font-sans);font-size:1.0625rem;font-weight:400;line-height:1.65;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+html[data-ground="void"] body{background:var(--void);color:var(--ivory)}
+html[data-ground="ivory"] body{background:var(--ivory);color:var(--void)}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+img,svg{display:block;max-width:100%}
+a{color:inherit}
+h1,h2,h3,p{margin:0}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip-link{position:absolute;left:var(--page-pad);top:-3rem;z-index:100;padding:.5rem .9rem;background:var(--ivory);color:var(--void);font-size:.75rem;text-decoration:none}
+.skip-link:focus{top:.5rem}
+:focus-visible{outline:2px solid var(--resonance);outline-offset:3px}
+
+/* ==========================================================================
+   Brand components (from the live stylesheet)
+   ========================================================================== */
+.site-header{display:flex;align-items:center;justify-content:space-between;gap:1.75rem;min-height:var(--header-h);padding:0 var(--page-pad)}
+.site-header--void{color:var(--ivory);background:var(--void);border-bottom:1px solid var(--hair-void)}
+.site-header--ivory{color:var(--void);background:var(--ivory);border-bottom:1px solid var(--hair)}
+.logo{display:flex;align-items:center;text-decoration:none;min-width:0}
+.logo img{height:1.38rem;width:auto;display:block}
+.nav{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:.35rem 1.5rem}
+.nav a{font-size:.6875rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;color:inherit;opacity:.72;
+  display:inline-flex;align-items:center;min-height:2rem}
+.nav a:hover,.nav a[aria-current=page]{opacity:1}
+.label{margin:0;font-family:var(--font-sans);font-size:.6875rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;line-height:1.4}
+.meta{font-family:var(--font-mono);font-size:.75rem;font-weight:400;letter-spacing:.02em;line-height:1.45}
+.hero-cta{margin:2rem 0 0;display:inline-flex;align-items:center;gap:.65rem;min-height:2.75rem;font-size:.6875rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;
+  color:var(--ivory);border-bottom:1px solid var(--hair-void);padding-bottom:.2rem;transition:border-color .3s var(--ease)}
+.hero-cta:hover{border-bottom-color:var(--ivory)}
+.hero-cta--ink{color:var(--void);border-bottom-color:var(--hair)}
+.hero-cta--ink:hover{border-bottom-color:var(--void)}
+.hero-deck{margin:1.75rem 0 0;max-width:28em;color:var(--mist);font-size:clamp(1.02rem,1.35vw,1.15rem);line-height:1.55}
+.hero-deck--ink{color:var(--charcoal)}
+.hero-h1{margin:0;font-family:var(--font-serif);font-size:clamp(2.85rem,7.2vw,5.35rem);font-weight:400;line-height:1.02;letter-spacing:-.035em;font-optical-sizing:auto;text-wrap:balance}
+.wrap{width:min(100% - 2 * var(--page-pad),var(--content));margin-inline:auto}
+.band{padding:clamp(3.5rem,8vw,6.5rem) 0}
+.band+.band{border-top:1px solid var(--hair)}
+.split{display:grid;grid-template-columns:minmax(8rem,14rem) minmax(0,1fr);gap:clamp(1.5rem,4vw,4rem)}
+.section-copy{max-width:var(--measure)}
+.section-copy h2{margin:0 0 1.2rem;font-family:var(--font-serif);font-size:clamp(2rem,3.4vw,2.75rem);font-weight:400;line-height:1.12;letter-spacing:-.03em;text-wrap:balance;font-optical-sizing:auto}
+.section-copy p{color:var(--charcoal);text-wrap:pretty}
+.section-copy p+p{margin-top:1.15em}
+.text-link{display:inline-block;margin-top:1.5rem;text-decoration-thickness:1px;text-underline-offset:.3em;font-size:.95rem;padding-block:.5rem}
+.work-links{display:flex;flex-wrap:wrap;column-gap:1.75rem}
+.site-footer{padding:1.5rem var(--page-pad) 2rem;border-top:1px solid var(--hair);display:flex;flex-wrap:wrap;justify-content:space-between;gap:.75rem 1.5rem;color:var(--charcoal);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase}
+.site-footer a{text-decoration:none;border-bottom:1px solid transparent}
+.site-footer a:hover{color:var(--void);border-bottom-color:var(--hair)}
+.site-footer p{margin:0}
+.site-footer--void{color:var(--ivory-72);border-top-color:var(--hair-void)}
+.site-footer--void a:hover{color:var(--ivory);border-bottom-color:var(--hair-void-strong)}
+@keyframes rise{from{opacity:0;transform:translate3d(0,.7rem,0)}to{opacity:1;transform:none}}
+
+/* ==========================================================================
+   Direction chrome (review strip + handoff footer) — shared by A, B, C
+   Collapses when the direction is embedded in index.html.
+   ========================================================================== */
+.dir-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:.35rem 1.25rem;padding:.6rem var(--page-pad);
+  background:var(--charcoal);color:var(--mist);font-family:var(--font-mono);font-size:.6875rem;line-height:1.4;letter-spacing:.04em;position:relative;z-index:60}
+.dir-head .dir-eyebrow{color:var(--ivory);text-transform:uppercase;letter-spacing:.14em;font-weight:500}
+.dir-head a{color:var(--ivory);text-underline-offset:.25em}
+footer[data-brainstorm-meta]{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1.5rem;padding:.9rem var(--page-pad);
+  background:var(--charcoal);color:var(--mist);font-family:var(--font-mono);font-size:.6875rem;line-height:1.4;letter-spacing:.04em;position:relative;z-index:60}
+footer[data-brainstorm-meta] a{color:var(--ivory);text-underline-offset:.25em}
+footer[data-brainstorm-meta] [data-direction-label]{color:var(--ivory);font-weight:500;letter-spacing:.14em;text-transform:uppercase}
+html[data-embedded="true"] .dir-head{display:none}
+html[data-embedded="true"] footer[data-brainstorm-meta]{font-size:.6875rem;opacity:.85}
+@media (max-width:520px){
+  .site-header{flex-wrap:wrap;align-items:center;padding-top:.95rem;padding-bottom:.85rem;row-gap:.75rem}
+  .logo img{height:1.15rem}
+  .nav{flex:1 1 100%;justify-content:flex-start;gap:.35rem 1.15rem}
+}
+@media (max-width:380px){ .nav{gap:.3rem .9rem} }
+
+/* ==========================================================================
+   Review wrapper tokens (index.html only) — names follow canvas-framework.md
+   ========================================================================== */
+:root{
+  --bg-page:var(--ivory);
+  --bg-1:#fbfaf7;
+  --bg-2:var(--paper-tint);
+  --bg-3:#e3e1da;
+  --bg-4:var(--mist);
+  --bg-inverted:var(--void);
+  --brand-bg-1:var(--resonance);
+  --brand-bg-1-hover:#4f7e79;
+  --brand-bg-2:var(--resonance-wash);
+  --brand-fg-1:var(--resonance-ink);
+  --brand-fg-link:var(--resonance-ink);
+  --brand-stroke-2:rgba(92,143,138,.45);
+  --fg-1:var(--void);
+  --fg-2:var(--charcoal);
+  --fg-3:rgba(10,10,10,.64);
+  --fg-disabled:var(--void-32);
+  --fg-on-brand:#fff;
+  --stroke-1:rgba(10,10,10,.08);
+  --stroke-2:var(--hair);
+  --stroke-3:var(--hair-strong);
+  --success-bg-1:var(--resonance-wash);
+  --success-fg-1:var(--resonance-ink);
+  --warning-bg-1:#f3ead7;
+  --warning-fg-1:#7a5a14;
+  --danger-bg-1:#f3dcda;
+  --danger-fg-1:#8a2f2a;
+  --radius-sm:2px;--radius-md:4px;--radius-lg:6px;--radius-xl:10px;
+  --shadow-04:0 1px 2px rgba(10,10,10,.05);
+  --shadow-08:0 2px 8px rgba(10,10,10,.06);
+  --shadow-16:0 8px 24px rgba(10,10,10,.08);
+  --font:var(--font-sans);
+  --text-display:400 clamp(1.75rem,3.2vw,2.5rem)/1.12 var(--font-serif);
+  --text-h1:400 1.5rem/1.2 var(--font-serif);
+  --text-h2:500 1rem/1.35 var(--font-sans);
+  --text-h3:500 .875rem/1.35 var(--font-sans);
+  --text-body:400 .84375rem/1.55 var(--font-sans);
+  --text-caption:500 .6875rem/1.4 var(--font-sans);
+  /* Direction accents identify the three directions in review chrome only. */
+  --accent-A:#5b5fc7;
+  --accent-B:#0e7c86;
+  --accent-C:#9d5d00;
+  --accent-D:#b8003e;
+}

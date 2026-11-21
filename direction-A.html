@@ -1,0 +1,1086 @@
+<!doctype html>
+<html lang="en" data-ground="void" data-product="waking-matter">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Waking Matter · Direction A · The Second Run</title>
+<meta name="description" content="Waking Matter builds memory, provenance and evaluation infrastructure for agents working with changing information.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="shared/tokens.css">
+<style>
+/* ---- Direction A: The Second Run (void only, one thread, scroll = time) ---- */
+:root{--spine-x:calc(var(--page-pad) + .5rem);--gutter-in:3rem}
+@media (max-width:759px){:root{--spine-x:14px;--gutter-in:1.5rem}}
+body{overflow-x:clip}
+main{position:relative;display:block}
+.spine-probe{position:absolute;left:var(--spine-x);top:0;width:0;height:0}
+#loom{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:visible}
+.a-wrap{margin-left:max(calc(var(--spine-x) + var(--gutter-in)),calc((100% - var(--content)) / 2));
+  margin-right:max(var(--page-pad),calc((100% - var(--content)) / 2))}
+@media (max-width:759px){.a-wrap{margin-right:1.25rem}}
+
+/* spine week stamps: time advances as you scroll */
+.wk{position:absolute;left:var(--spine-x);transform:translate(calc(-100% - .7rem),-50%);font-family:var(--font-mono);font-size:.6875rem;line-height:1;
+  letter-spacing:.04em;color:var(--ivory-56);white-space:nowrap;transition:color .4s var(--ease);z-index:2}
+.wk.on{color:var(--ivory)}
+.wk--range{text-align:right;line-height:1.35}
+@media (max-width:759px){.wk{transform:translate(-50%,-50%);left:var(--spine-x);background:var(--void);padding:.3rem 0;writing-mode:vertical-rl;font-size:.625rem}}
+
+/* header stays static */
+.site-header{position:relative;z-index:5}
+
+/* ---- Hero ------------------------------------------------------------- */
+.hero{position:relative;min-height:calc(100svh - var(--header-h));display:flex;align-items:center;padding:2.5rem 0 7rem}
+html[data-embedded="false"] .hero{min-height:calc(100svh - var(--header-h) - 2.2rem)}
+.hero>.a-wrap{flex:1;min-width:0}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 25rem;column-gap:clamp(2.5rem,6vw,6rem);align-items:center}
+.hero-text .label{color:var(--ivory-72)}
+.hero-text .hero-h1{margin-top:1.35rem}
+.hero-fig{margin:0;position:relative;z-index:2}
+.runs{width:100%;height:auto;overflow:visible}
+.runs text{font-family:var(--font-mono);font-size:11px;fill:var(--ivory);letter-spacing:.01em}
+.runs .hd{font-size:10.5px;letter-spacing:.1em;fill:var(--ivory-72)}
+.runs .sm{font-size:10px;fill:var(--ivory-72)}
+.runs .guide{fill:none;stroke:var(--ivory-20);stroke-width:1;stroke-dasharray:2 4}
+.runs .ink{fill:none;stroke:var(--ivory-72);stroke-width:1.25;stroke-linejoin:round}
+.runs .dot{fill:var(--void);stroke:var(--ivory-72);stroke-width:1.25}
+.runs .chk{fill:var(--void);stroke:var(--resonance);stroke-width:1.5}
+.runs .chk-fill{fill:var(--resonance)}
+.runs .xm,.runs .ok{fill:none;stroke:var(--ivory);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.runs .notch{fill:none;stroke:var(--ivory);stroke-width:2;stroke-linecap:round}
+.runs .res{fill:none;stroke:var(--resonance);stroke-width:1.5;stroke-linecap:round}
+.runs .t-res{fill:var(--resonance)}
+.runs .t-res.pend{fill:var(--ivory)}
+.hero-cap{margin-top:1.6rem;display:grid;gap:.35rem;justify-items:start}
+.hero-cap .cap1{color:var(--ivory)}
+.hero-cap .cap2{color:var(--ivory-56)}
+.replay{display:none;margin-top:.35rem;align-items:center;gap:.5rem;min-height:2rem;padding:0 .1rem;background:none;border:0;border-bottom:1px solid var(--hair-void);
+  color:var(--ivory-72);font-family:var(--font-mono);font-size:.75rem;letter-spacing:.04em;cursor:pointer;transition:color .3s var(--ease),border-color .3s var(--ease)}
+.replay:hover{color:var(--ivory);border-bottom-color:var(--ivory-56)}
+html[data-reduced="false"] .replay{display:inline-flex}
+@media (max-width:759px){
+  .hero{display:block;padding:2.25rem 0 3rem}
+  .hero-grid{grid-template-columns:minmax(0,1fr);row-gap:2.5rem}
+  .hero-fig{max-width:23rem}
+  .replay{min-height:2.75rem}
+  /* the figure scales below 1:1 on phones; keep its mono labels at >= 10px rendered */
+  .runs text{font-size:12px;letter-spacing:-.01em}
+  .runs .hd,.runs .sm{font-size:12px}
+}
+
+/* ---- Scenes ------------------------------------------------------------ */
+.scene{position:relative;padding:clamp(4rem,8vw,6.5rem) 0}
+.scene .wk{top:calc(clamp(4rem,8vw,6.5rem) + .5rem)}
+.grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);column-gap:clamp(2rem,5vw,4rem);align-items:start}
+.grid>.copy{grid-column:2;grid-row:1}
+.grid>.fig{grid-column:1;grid-row:1}
+.grid--rev{grid-template-columns:minmax(0,6fr) minmax(0,5fr)}
+.grid--rev>.copy{grid-column:1}
+.grid--rev>.fig{grid-column:2}
+.copy{position:relative;z-index:2}
+.copy .label{color:var(--ivory-72);margin-bottom:1.1rem}
+.section-copy p{color:var(--ivory-72)}
+.copy .text-link{color:var(--ivory)}
+.copy .text-link:hover{text-decoration-color:var(--ivory)}
+.copy .meta{color:var(--ivory-56);margin-top:1.25rem}
+.fig{margin:0;position:relative;z-index:2;min-width:0;pointer-events:none}
+.stage{position:relative;margin:0;padding:0;list-style:none}
+.lbl{font-family:var(--font-mono);font-size:.6875rem;line-height:1.45;letter-spacing:.01em;color:var(--ivory-72);display:block}
+.lbl .dim{color:var(--ivory-56)}
+.lbl.res{color:var(--resonance)}
+.lbl.short .dim{display:none}
+.lbl .nw{white-space:nowrap}
+.lbl.stale{text-decoration:line-through;text-decoration-color:var(--ivory-56)}
+.quote{margin-top:1.5rem;max-width:24rem}
+.quote p{font-family:var(--font-serif);font-size:1.15rem;line-height:1.4;color:var(--ivory-72);font-style:italic}
+.quote .meta{font-style:normal;font-family:var(--font-mono);font-size:.75rem;color:var(--ivory-56);margin-top:.5rem}
+/* JS on: labels are laid out on the diagram */
+html[data-reduced] .stage .lbl{position:absolute;white-space:nowrap}
+html[data-reduced] .stage .lbl.wrap{white-space:normal}
+html[data-reduced] .st-problem{height:27rem}
+html[data-reduced] .st-gate{height:37rem}
+html[data-reduced] .micro{height:14rem;margin-top:1.25rem}
+html[data-reduced] .st-passes{height:70rem}
+html[data-reduced] .st-column{height:22rem}
+@media (max-width:759px){
+  .grid,.grid--rev{display:block}
+  .fig{margin-top:2.5rem}
+  html[data-reduced] .st-problem{height:26rem}
+  html[data-reduced] .st-gate{height:40rem}
+  html[data-reduced] .st-passes{height:63rem}
+  html[data-reduced] .st-column{height:18rem}
+}
+html:not([data-reduced]) .stage{display:grid;gap:.35rem}
+
+/* contract rows */
+.gate-row{display:contents}
+.gate-row .t{color:var(--ivory-56);text-transform:uppercase;letter-spacing:.12em;font-size:.625rem}
+html:not([data-reduced]) .gate-row{display:grid;gap:.2rem;margin-bottom:1rem}
+
+/* questions */
+.q-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.5rem 2rem;margin-bottom:9rem}
+.q-head .label{margin:0;color:var(--ivory-72)}
+.q-head .counter{color:var(--ivory-56);margin-left:1rem}
+.q-head .text-link{margin-top:0;color:var(--ivory)}
+.lanes{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));column-gap:2rem}
+.lane{position:relative;padding-left:1.4rem;min-width:0}
+.lane-n{color:var(--ivory-56)}
+.lane h3{margin:.35rem 0 .6rem;font-family:var(--font-serif);font-weight:400;font-size:1.6rem;line-height:1.15;letter-spacing:-.02em}
+.lane-q{font-size:.95rem;line-height:1.55;color:var(--ivory-72);min-height:7.8em;text-wrap:pretty}
+@media (max-width:1100px) and (min-width:760px){.lane-q{min-height:10.9em}.lanes{column-gap:1.25rem}}
+@media (max-width:759px){
+  .q-head{margin-bottom:3rem}
+  .q-head .text-link{order:3}
+  .lanes{display:block}
+  .lane+.lane{margin-top:2.5rem}
+  .lane-q{min-height:0}
+  .q-foot{margin-top:4.5rem}
+}
+.q-foot{display:none}
+@media (max-width:759px){.q-foot{display:block}.q-head .text-link{display:none}}
+
+/* repeated */
+.rep{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);column-gap:clamp(2rem,5vw,4rem)}
+.rep>.copy{grid-column:2;grid-row:1}
+.rep>.fig{grid-column:1 / -1;grid-row:1;margin:0}
+.passes{list-style:none;margin:0;padding:0}
+.legend{display:grid;gap:.25rem;max-width:20rem}
+.legend .lbl{position:static !important;white-space:normal !important}
+.legend .k{display:inline-block;width:1.1rem;color:var(--ivory)}
+.legend .k.res{color:var(--resonance)}
+html[data-reduced] .legend{position:absolute;z-index:2}
+@media (max-width:759px){.rep{display:block}.rep>.fig{margin-top:2.5rem}}
+
+/* accumulate + end */
+.col-cap{margin-left:4.5rem}
+.end{position:relative;padding:3.5rem 0 5rem}
+.end .mark-slot{grid-column:2;position:relative;z-index:2}
+.end-lockup{display:block;width:100%;max-width:40rem;height:auto}
+html[data-reduced] .end-lockup{clip-path:inset(0 0 0 6.6%)}
+@media (max-width:759px){.end .mark-slot{margin-top:0}}
+
+/* fixed travellers (the bead) */
+.tb{position:fixed;left:0;top:0;width:48px;height:48px;margin:-24px 0 0 -24px;pointer-events:none;z-index:3;opacity:0;will-change:transform,opacity;overflow:visible}
+html[data-reduced="true"] .tb{display:none}
+
+/* footers */
+.site-footer--void{position:relative;z-index:4;background:var(--void)}
+.site-footer .e2b{display:inline-block;vertical-align:middle;width:67px;height:30px;filter:invert(1);margin:0 .35rem}
+.site-footer .credit{display:inline-flex;align-items:center}
+@media (max-width:759px){.site-footer a,.nav a{min-height:2.75rem;display:inline-flex;align-items:center}}
+
+/* no-JS and OS reduced motion: everything visible, nothing moves */
+@media (prefers-reduced-motion:reduce){.tb{display:none}.wk{transition:none}}
+</style>
+</head>
+<body>
+<div class="dir-head" data-component="DirectionHead">
+  <span class="dir-eyebrow">Concept direction A</span>
+  <span>The Second Run</span>
+  <span>One thread runs down the page; scroll is time, and the trace from run 1 changes run 2.</span>
+  <a href="index.html" data-test-id="dir-head-back" data-applicable-states="rest hover focus-visible">&larr; all directions</a>
+</div>
+<a class="skip-link" href="#main" data-test-id="skip-link" data-applicable-states="rest focus-visible">Skip to content</a>
+
+<header class="site-header site-header--void" data-component="SiteHeader">
+  <a class="logo" href="https://wakingmatter.com/" data-test-id="header-logo" data-applicable-states="rest hover focus-visible"><img src="shared/assets/lockup-on-void.svg" alt="Waking Matter" width="160" height="22"></a>
+  <nav class="nav" aria-label="Primary" data-component="PrimaryNav">
+    <a href="https://wakingmatter.com/about/" data-test-id="nav-about" data-applicable-states="rest hover focus-visible">About</a>
+    <a href="https://wakingmatter.com/research/" data-test-id="nav-research" data-applicable-states="rest hover focus-visible">Research</a>
+    <a href="https://wakingmatter.com/notes/" data-test-id="nav-notes" data-applicable-states="rest hover focus-visible">Notes</a>
+    <a href="mailto:hello@wakingmatter.com" data-test-id="nav-contact" data-applicable-states="rest hover focus-visible">Contact</a>
+  </nav>
+</header>
+
+<main id="main" data-component="Thread">
+  <i class="spine-probe" aria-hidden="true"></i>
+  <svg id="loom" aria-hidden="true" focusable="false" data-motion-purpose="continuity">
+    <defs>
+      <radialGradient id="gBead" cx="34%" cy="28%" r="72%"><stop offset="0" stop-color="#e2e4e1"/><stop offset=".36" stop-color="#3a3e3c"/><stop offset="1" stop-color="#1a1c1b"/></radialGradient>
+      <linearGradient id="gPL" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#8e928f"/><stop offset=".58" stop-color="#8e928f"/><stop offset=".62" stop-color="#d6d9d7"/><stop offset="1" stop-color="#d6d9d7"/></linearGradient>
+      <linearGradient id="gPR" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#d6d9d7"/><stop offset=".38" stop-color="#d6d9d7"/><stop offset=".42" stop-color="#8e928f"/><stop offset="1" stop-color="#8e928f"/></linearGradient>
+      <clipPath id="rec"><rect id="recRect" x="-10" y="0" width="10000" height="0"/></clipPath>
+    </defs>
+    <g id="gFut"></g>
+    <g id="gPast" clip-path="url(#rec)"></g>
+    <g id="gLive"></g>
+  </svg>
+
+  <!-- HERO ---------------------------------------------------------------->
+  <section class="hero" id="top" data-beat="hero" data-beat-label="Hero · two runs" data-component="Hero">
+    <span class="wk" data-wk="hero12" aria-hidden="true">wk 12</span>
+    <span class="wk" data-wk="dock" aria-hidden="true">wk 13</span>
+    <div class="a-wrap hero-grid">
+      <div class="hero-text">
+        <p class="label">Building systems for cumulative intelligence</p>
+        <h1 class="hero-h1">Agents should improve with experience.</h1>
+        <p class="hero-deck">We build memory, provenance and evaluation infrastructure for agents working with changing information.</p>
+        <a class="hero-cta" href="#problem" data-test-id="hero-cta" data-component="Link" data-applicable-states="rest hover focus-visible">Explore the work <span aria-hidden="true">↓</span></a>
+      </div>
+      <figure class="hero-fig" data-component="TwoRuns" data-motion-purpose="guidance" aria-labelledby="runs-cap">
+        <svg class="runs" viewBox="0 0 356 372" aria-hidden="true" focusable="false">
+          <text class="hd" x="136" y="14" text-anchor="end">RUN 1 · WK 12</text>
+          <text class="hd" x="208" y="14">RUN 2 · WK 13</text>
+          <path class="guide" d="M130 30V150L148 168V222L130 240V330"/>
+          <path class="guide" d="M214 30V330"/>
+          <path class="ink" id="r1p" d="M130 30V150L148 168V222L130 240V330"/>
+          <path class="ink" id="r2p" d="M214 30V330"/>
+          <circle class="dot" data-run="1" cx="130" cy="60" r="3.5"/>
+          <circle class="dot" data-run="1" cx="130" cy="150" r="3.5"/>
+          <circle class="dot" data-run="1" cx="130" cy="240" r="3.5"/>
+          <path class="xm" id="hx" d="M125 325l10 10m0-10l-10 10"/>
+          <path class="notch" id="hn" d="M142 330h14"/>
+          <text class="sm" id="hrec" x="141" y="352">recorded</text>
+          <path class="res" id="hres" d="M156 330C188 330 178 150 208 150"/>
+          <circle class="dot" data-run="2" cx="214" cy="60" r="3.5"/>
+          <circle class="chk" cx="214" cy="150" r="4.5"/>
+          <circle class="chk-fill" id="hchk" cx="214" cy="150" r="2.6"/>
+          <circle class="dot" data-run="2" cx="214" cy="240" r="3.5"/>
+          <path class="ok" id="hok" d="M208.5 329.5l4 4.5 8-10"/>
+          <g class="r1l" text-anchor="end">
+            <text x="118" y="64" data-y="60">Gather sources</text>
+            <text x="118" y="154" data-y="150">Use price-list.pdf</text>
+            <text x="118" y="244" data-y="240">Draft report</text>
+            <text x="118" y="334" data-y="330">Person corrects</text>
+          </g>
+          <g class="r2l">
+            <text x="226" y="64" data-y="60">Gather sources</text>
+            <text x="226" y="154" data-y="150" class="t-res">Check source date</text>
+            <text x="226" y="244" data-y="240">Use supplier-portal</text>
+            <text x="226" y="334" data-y="330">Draft report</text>
+          </g>
+        </svg>
+        <figcaption class="hero-cap" id="runs-cap">
+          <span class="sr-only">The same weekly supplier report, run twice. Run 1, week 12: gather sources, use price-list.pdf, draft report, a person corrects it; the correction is recorded. Run 2, week 13: gather sources, check source date, use supplier-portal, draft report, no correction.</span>
+          <span class="meta cap1">Run 2 starts with a check that Run 1 earned.</span>
+          <span class="meta cap2">Illustrative scenario, not a result</span>
+          <button class="replay" type="button" data-test-id="hero-replay" data-component="Button" data-applicable-states="rest hover focus-visible">Replay <span aria-hidden="true">↺</span></button>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- THE PROBLEM ---------------------------------------------------------->
+  <section class="scene" id="problem" data-beat="problem" data-beat-label="The problem · the bundle" data-component="Problem" data-motion-purpose="guidance" aria-labelledby="problem-h">
+    <span class="wk" aria-hidden="true">wk 14</span>
+    <div class="a-wrap grid">
+      <div class="copy section-copy">
+        <p class="label">The problem</p>
+        <h2 id="problem-h">Memory is not enough.</h2>
+        <p>A stored answer can be outdated. A successful procedure can fail when the task changes. Keeping more history does not tell an agent what to trust or do next.</p>
+        <p>The challenge is to connect retained experience to decisions, and to notice when the past has become a liability.</p>
+      </div>
+      <figure class="fig">
+        <div class="stage st-problem">
+          <span class="lbl" data-k="stored">stored · not trusted</span>
+          <span class="lbl" data-k="decision">decision</span>
+          <span class="sr-only">Diagram: the thread fans out into fourteen lines of stored history; only one line is drawn out of the bundle to a decision.</span>
+        </div>
+        <figcaption class="quote"><p>“An agent can finish a task without leaving its successor better prepared.”</p><p class="meta">from the essay</p></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- AGENT MEMORY CONTRACTS ---------------------------------------------->
+  <section class="scene" id="contract" data-beat="contract" data-beat-label="Agent Memory Contracts · the gate" data-component="Contract" data-motion-purpose="guidance" aria-labelledby="contract-h">
+    <span class="wk" aria-hidden="true">wk 15</span>
+    <div class="a-wrap grid">
+      <div class="copy section-copy">
+        <p class="label">Public technical work</p>
+        <h2 id="contract-h">Agent Memory Contracts</h2>
+        <p>An agent’s interpretation should not silently become a fact. Agent Memory Contracts is a public Python library for making that boundary explicit.</p>
+        <p>Source evidence stays linked to a candidate claim. Accepting the claim requires a recorded decision, and the validator rejects a trusted record without the required authorization. The worked reducer example shows acceptance, rejection and an invalid promotion.</p>
+        <div class="work-links">
+          <a class="text-link" href="https://github.com/avs-io/agent-memory-contracts" rel="noopener" data-test-id="amc-code" data-component="Link" data-applicable-states="rest hover focus-visible">Inspect the code and tests ↗</a>
+          <a class="text-link" href="https://github.com/avs-io/agent-memory-contracts/blob/main/examples/reference_reducer.py" rel="noopener" data-test-id="amc-example" data-component="Link" data-applicable-states="rest hover focus-visible">Run the worked example ↗</a>
+        </div>
+      </div>
+      <figure class="fig">
+        <ol class="stage st-gate">
+          <li class="gate-row" data-row="0">
+            <span class="lbl t">accept</span>
+            <span class="lbl wrap" data-k="cand">cand_7f3a · price-list.pdf · p.3 · published 3 Mar</span>
+            <span class="lbl" data-k="dec">dec_2b91 · ops reviewer</span>
+            <span class="lbl" data-k="out">fact_c40e · <span class="dim">trusted</span></span>
+          </li>
+          <li class="gate-row" data-row="1">
+            <span class="lbl t">reject</span>
+            <span class="lbl wrap" data-k="cand">cand_7f3a · price-list.pdf · p.3 · published 3 Mar</span>
+            <span class="lbl" data-k="out">candidate kept, not trusted</span>
+          </li>
+          <li class="gate-row" data-row="2">
+            <span class="lbl t">invalid promotion</span>
+            <span class="lbl wrap" data-k="cand">cand_7f3a → fact_ · no dec_</span>
+            <span class="lbl wrap" data-k="out">rejected: a trusted record needs an authorizing decision</span>
+          </li>
+        </ol>
+      </figure>
+    </div>
+  </section>
+
+  <!-- FOUR QUESTIONS ------------------------------------------------------->
+  <section class="scene" id="questions" data-beat="questions" data-beat-label="Four questions · lanes" data-component="Questions" data-motion-purpose="guidance" aria-labelledby="questions-h">
+    <span class="wk" aria-hidden="true">wk 16</span>
+    <div class="a-wrap">
+      <div class="q-head">
+        <h2 class="label" id="questions-h">What we are investigating <span class="meta counter">01 / 04</span></h2>
+        <a class="text-link" href="https://wakingmatter.com/research/" data-test-id="research-link" data-component="Link" data-applicable-states="rest hover focus-visible">Explore the research questions →</a>
+      </div>
+      <ol class="lanes">
+        <li class="lane" data-lane="decisions">
+          <p class="meta lane-n">01</p>
+          <h3>Decisions</h3>
+          <p class="lane-q">When should a previous outcome change the next search, test or action?</p>
+          <div class="stage micro" aria-hidden="true">
+            <span class="lbl" data-k="past"><span class="nw">wk 12 ·</span> corrected</span>
+            <span class="lbl" data-k="act">act</span>
+            <span class="lbl" data-k="check">check first</span>
+          </div>
+        </li>
+        <li class="lane" data-lane="state">
+          <p class="meta lane-n">02</p>
+          <h3>Useful state</h3>
+          <p class="lane-q">Which facts, procedures and failed attempts deserve to persist, and with what source and scope?</p>
+          <div class="stage micro" aria-hidden="true">
+            <span class="lbl" data-k="m0">fact <span class="dim">· source · scope</span></span>
+            <span class="lbl" data-k="m1">procedure <span class="dim">· source · scope</span></span>
+            <span class="lbl" data-k="m2">failed attempt <span class="dim">· source · scope</span></span>
+          </div>
+        </li>
+        <li class="lane" data-lane="revision">
+          <p class="meta lane-n">03</p>
+          <h3>Revision</h3>
+          <p class="lane-q">How should a system detect stale knowledge and decide what to revise or reset?</p>
+          <div class="stage micro" aria-hidden="true">
+            <span class="lbl" data-k="v1">v1 · <span class="nw">price-list.pdf</span></span>
+            <span class="lbl" data-k="chg">source changed</span>
+            <span class="lbl" data-k="v2">v2 · <span class="nw">supersedes v1</span></span>
+          </div>
+        </li>
+        <li class="lane" data-lane="evaluation">
+          <p class="meta lane-n">04</p>
+          <h3>Evaluation</h3>
+          <p class="lane-q">Does retained experience improve results when context, compute and prior advice are accounted for?</p>
+          <div class="stage micro" aria-hidden="true">
+            <span class="lbl" data-k="fresh">fresh start</span>
+            <span class="lbl" data-k="o0">helps</span>
+            <span class="lbl" data-k="o1">no effect</span>
+            <span class="lbl" data-k="o2">hurts</span>
+          </div>
+        </li>
+      </ol>
+      <p class="q-foot"><a class="text-link" href="https://wakingmatter.com/research/" data-test-id="research-link-mobile" data-component="Link" data-applicable-states="rest hover focus-visible">Explore the research questions →</a></p>
+    </div>
+  </section>
+
+  <!-- REPEATED WORK -------------------------------------------------------->
+  <section class="scene" id="repeated" data-beat="repeated" data-beat-label="Repeated work · weekly passes" data-component="RepeatedWork" data-motion-purpose="guidance" aria-labelledby="repeated-h">
+    <span class="wk wk--range" aria-hidden="true">wk 12<br>–19</span>
+    <div class="a-wrap rep">
+      <div class="copy section-copy">
+        <p class="label">Repeated work</p>
+        <h2 id="repeated-h">Bring a problem that keeps coming back.</h2>
+        <p>Does an agent reconstruct the same context every week, repeat a known mistake or fail when a fact changes? We want to work on recurring workflows where the result can be checked and a person can intervene.</p>
+        <a class="text-link" href="mailto:hello@wakingmatter.com" data-test-id="workflow-link" data-component="Link" data-applicable-states="rest hover focus-visible">Tell us about your workflow →</a>
+      </div>
+      <figure class="fig">
+        <div class="stage st-passes">
+          <ol class="passes" aria-label="Weekly runs of the same report">
+            <li class="lbl" data-k="p0">wk 12<span class="sr-only">: price-list.pdf used, person corrects</span></li>
+            <li class="lbl" data-k="p1">wk 13<span class="sr-only">: source date checked first</span></li>
+            <li class="lbl" data-k="p2">wk 14<span class="sr-only">: source date checked first</span></li>
+            <li class="lbl" data-k="p3">wk 15<span class="sr-only">: source date checked first</span></li>
+            <li class="lbl" data-k="p4">wk 16<span class="sr-only">: source date checked first</span></li>
+            <li class="lbl" data-k="p5">wk 17<span class="sr-only">: the check is revisited</span></li>
+            <li class="lbl" data-k="p6">wk 18<span class="sr-only">: revised check used</span></li>
+            <li class="lbl" data-k="p7">wk 19<span class="sr-only">: revised check used</span></li>
+          </ol>
+          <span class="lbl" data-k="revisit">portal format changed · revisit</span>
+          <div class="legend">
+            <span class="lbl"><span class="k">·</span>gather sources</span>
+            <span class="lbl"><span class="k res">●</span>check source date</span>
+            <span class="lbl"><span class="k">·</span>use source</span>
+            <span class="lbl"><span class="k">✓</span>draft report <span class="dim">· × person corrects</span></span>
+            <span class="lbl dim" style="margin-top:.6rem">Illustrative scenario, not a result</span>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <!-- THE BROADER THESIS --------------------------------------------------->
+  <section class="scene" id="accumulate" data-beat="accumulate" data-beat-label="Thesis · the column" data-component="Thesis" data-motion-purpose="guidance" aria-labelledby="accumulate-h">
+    <span class="wk" aria-hidden="true">wk 20</span>
+    <div class="a-wrap grid grid--rev">
+      <div class="copy section-copy">
+        <p class="label">The broader thesis</p>
+        <h2 id="accumulate-h">Intelligence should accumulate.</h2>
+        <p>Learning costs time, attention and failed attempts. The essay asks what should survive that investment, how it can pass between systems and when it should lose authority.</p>
+        <p class="meta">2026-09-15 · Updated 2026-10-16</p>
+        <a class="text-link" href="https://wakingmatter.com/notes/intelligence-should-accumulate/" data-test-id="essay-link" data-component="Link" data-applicable-states="rest hover focus-visible">Read the essay →</a>
+      </div>
+      <figure class="fig">
+        <div class="stage st-column">
+          <span class="lbl" data-k="c0">wk 12 · dec_2b91</span>
+          <span class="lbl" data-k="c1">wk 17 · revised</span>
+          <span class="lbl" data-k="c2">wk 20</span>
+          <span class="sr-only">Diagram: every pass leaves a mark; the marks stack into a column; older marks are dimmer but remain.</span>
+        </div>
+        <figcaption class="quote col-cap"><p>“The ability to preserve information needs a corresponding ability to limit its authority.”</p><p class="meta">from the essay</p></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- CLOSE: THE MARK -------------------------------------------------------->
+  <section class="end" id="end" data-beat="end" data-beat-label="Close · the mark" data-component="Mark" data-motion-purpose="brand-expression" aria-label="Waking Matter">
+    <div class="a-wrap grid grid--rev">
+      <div class="mark-slot"><img class="end-lockup" src="shared/assets/lockup-on-void.svg" alt="Waking Matter" width="640" height="89"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer site-footer--void" data-component="SiteFooter">
+  <p><a href="https://wakingmatter.com/" data-test-id="footer-home" data-applicable-states="rest hover focus-visible">wakingmatter.com</a> · Building systems for cumulative intelligence.</p>
+  <p><a href="https://avsingh.com/writing/the-million-tendril-problem/" rel="noopener" data-test-id="footer-founder" data-applicable-states="rest hover focus-visible">From the founder</a> · <a href="mailto:hello@wakingmatter.com" data-test-id="footer-email" data-applicable-states="rest hover focus-visible">hello@wakingmatter.com</a> · <a href="https://www.linkedin.com/company/wakingmatter/" target="_blank" rel="noopener" data-test-id="footer-linkedin" data-applicable-states="rest hover focus-visible">LinkedIn<span class="sr-only"> (opens in a new tab)</span></a> · <a class="credit" href="https://e2b.dev" rel="noopener" data-test-id="footer-e2b" data-applicable-states="rest hover focus-visible">Backed by <img class="e2b" src="shared/assets/e2b.svg" alt="E2B" width="67" height="30"> for Startups</a></p>
+</footer>
+
+<footer data-brainstorm-meta>
+  <span data-direction-label>A</span> <span data-direction-name>The Second Run</span> <span data-fluent-components>none (marketing site)</span> <a href="index.html" data-test-id="meta-back" data-applicable-states="rest hover focus-visible">back to the directions</a>
+</footer>
+
+<svg class="tb" id="tb0" viewBox="-24 -24 48 48" aria-hidden="true" focusable="false" data-motion-purpose="continuity"><circle class="b-ring" r="10" fill="none" stroke="rgba(247,246,243,.34)" stroke-width="1"/><circle class="b-core" r="9" fill="url(#gBead)"/><circle class="b-iv" r="9" fill="#f7f6f3" opacity="0"/></svg>
+<svg class="tb" id="tb1" viewBox="-24 -24 48 48" aria-hidden="true" focusable="false" data-motion-purpose="continuity"><circle class="b-ring" r="10" fill="none" stroke="rgba(247,246,243,.34)" stroke-width="1"/><circle class="b-core" r="9" fill="url(#gBead)"/></svg>
+<svg class="tb" id="tb2" viewBox="-24 -24 48 48" aria-hidden="true" focusable="false" data-motion-purpose="continuity"><circle class="b-ring" r="10" fill="none" stroke="rgba(247,246,243,.34)" stroke-width="1"/><circle class="b-core" r="9" fill="url(#gBead)"/></svg>
+<svg class="tb" id="tb3" viewBox="-24 -24 48 48" aria-hidden="true" focusable="false" data-motion-purpose="continuity"><circle class="b-ring" r="10" fill="none" stroke="rgba(247,246,243,.34)" stroke-width="1"/><circle class="b-core" r="9" fill="url(#gBead)"/></svg>
+<svg class="tb" id="tbg" viewBox="-24 -24 48 48" aria-hidden="true" focusable="false" data-motion-purpose="feedback"><circle r="8" fill="#0a0a0a" stroke="rgba(247,246,243,.6)" stroke-width="1.25" stroke-dasharray="2.5 2.5"/></svg>
+
+<script src="shared/dir.js"></script>
+<script>
+(function () {
+  'use strict';
+  var WM = window.WM, doc = document, root = doc.documentElement;
+  var NS = 'http://www.w3.org/2000/svg';
+  var AV = 0.4;                         // the bead rides 40% down the viewport
+  var main = doc.getElementById('main');
+  var loom = doc.getElementById('loom');
+  var gFut = doc.getElementById('gFut'), gPast = doc.getElementById('gPast'), gLive = doc.getElementById('gLive');
+  var recRect = doc.getElementById('recRect');
+  var clamp = WM.clamp, lerp = WM.lerp, smooth = WM.smooth;
+  function q(s, c) { return (c || doc).querySelector(s); }
+  function qa(s, c) { return [].slice.call((c || doc).querySelectorAll(s)); }
+  function pr(v, a, b) { return WM.invLerp(a, b, v); }
+  function sp(v, a, b) { return smooth(pr(v, a, b)); }
+  function mk(tag, at, parent) {
+    var e = doc.createElementNS(NS, tag);
+    for (var k in at) e.setAttribute(k, at[k]);
+    (parent || gPast).appendChild(e);
+    return e;
+  }
+  function op(e, v) { v = Math.round(v * 1000) / 1000; if (e._o !== v) { e._o = v; e.style.opacity = v; } }
+  function dash(p) { var l = p.getTotalLength(); p._l = l; p.style.strokeDasharray = l + ' ' + (l + 2); p.style.strokeDashoffset = l; return p; }
+  function drw(p, t) { var v = Math.round(p._l * (1 - clamp(t, 0, 1)) * 10) / 10; if (p._d !== v) { p._d = v; p.style.strokeDashoffset = v; } }
+  function cls(e, c, on) { if (!!e['_' + c] !== on) { e['_' + c] = on; e.classList.toggle(c, on); } }
+
+  /* ---- Route: one y-monotone thread; each bend is a smoothstep S-curve ----
+     The cubic C(x0,y0+dy/3)(x1,y0+2dy/3)(x1,y1) traces x = lerp(x0,x1,smooth(t))
+     with y linear in t, so the bead (x from smoothstep) sits exactly on the drawn line. */
+  function Route(x, y) { this.seg = []; this.x = x; this.y = y; this.d = 'M' + f(x) + ' ' + f(y); }
+  function f(n) { return Math.round(n * 10) / 10; }
+  Route.prototype.to = function (x, y) {
+    var x0 = this.x, y0 = this.y;
+    if (y <= y0 + 0.5) y = y0 + 0.5;
+    this.seg.push({ x0: x0, y0: y0, x1: x, y1: y });
+    if (Math.abs(x - x0) < 0.01) this.d += ' V' + f(y);
+    else { var dy = y - y0; this.d += ' C' + f(x0) + ' ' + f(y0 + dy / 3) + ' ' + f(x) + ' ' + f(y0 + 2 * dy / 3) + ' ' + f(x) + ' ' + f(y); }
+    this.x = x; this.y = y; return this;
+  };
+  Route.prototype.down = function (y) { return this.to(this.x, y); };
+  Route.prototype.hop = function (x, ratio, min) { var dy = Math.max(min || 40, Math.abs(x - this.x) * (ratio || 0.8)); return this.to(x, this.y + dy); };
+  Route.prototype.at = function (y) {
+    var s = this.seg;
+    if (!s.length || y <= s[0].y0) return s.length ? s[0].x0 : this.x;
+    var lo = 0, hi = s.length - 1;
+    while (lo < hi) { var mid = (lo + hi + 1) >> 1; if (s[mid].y0 <= y) lo = mid; else hi = mid - 1; }
+    var g = s[lo]; if (y >= g.y1) return g.x1;
+    return g.x0 + (g.x1 - g.x0) * smooth((y - g.y0) / (g.y1 - g.y0));
+  };
+
+  var L = { ready: false };
+  var M = { o: 1, iv: 0, r: 9 };
+  var mainTrack = WM.track(main);
+  var mr;
+  function rel(e) {
+    var r = e.getBoundingClientRect();
+    return { l: r.left - mr.left, t: r.top - mr.top, w: r.width, h: r.height, r: r.right - mr.left, b: r.bottom - mr.top };
+  }
+  function place(stage, stR, lbl, x, y, mode, maxW) {
+    if (!lbl) return;
+    var s = lbl.style;
+    s.top = (y - stR.t - (mode && mode.indexOf('t') > -1 ? 0 : 8)) + 'px';
+    if (mode && mode.charAt(0) === 'r') { s.left = 'auto'; s.right = (stR.r - x) + 'px'; }
+    else { s.right = 'auto'; s.left = (x - stR.l) + 'px'; }
+    if (maxW) s.maxWidth = maxW + 'px';
+  }
+  function lb(stage, k) { return q('[data-k="' + k + '"]', stage); }
+
+  /* =========================================================================
+     HERO: the same task, run twice (time-based once, skippable, replayable)
+     ========================================================================= */
+  var H = {
+    svg: q('.runs'), r1: doc.getElementById('r1p'), r2: doc.getElementById('r2p'),
+    x: doc.getElementById('hx'), n: doc.getElementById('hn'), rec: doc.getElementById('hrec'),
+    res: doc.getElementById('hres'), chk: doc.getElementById('hchk'), ok: doc.getElementById('hok'),
+    l1: qa('.r1l text'), l2: qa('.r2l text'), d1: qa('.runs .dot[data-run="1"]'), d2: qa('.runs .dot[data-run="2"]'),
+    cap1: q('.cap1'), cap2: q('.cap2'), replay: q('.replay'),
+    playing: false, done: false, raf: 0, y0: 0
+  };
+  [H.r1, H.r2, H.x, H.n, H.res, H.ok].forEach(dash);
+  var END = 5700;
+  var dockBead, markBead, dockPath;
+
+  function heroMap(px, py) { return [L.hk.l + px * L.hk.k, L.hk.t + py * L.hk.k]; }
+  function heroAt(t) {
+    if (!L.ready) return;
+    var p1 = pr(t, 300, 2300), p2 = pr(t, 3650, 4300), pd = WM.easeInOut(pr(t, 4800, 5700));
+    var pt, o = 1, rad = 7 * L.hk.k, by1 = -1, by2 = -1;
+    drw(H.r1, p1); drw(H.r2, p2);
+    if (t < 3450) { pt = H.r1.getPointAtLength(p1 * H.r1._l); by1 = t >= 300 ? pt.y : -1; }
+    else if (t < 3550) { pt = { x: 130, y: 330 }; o = 1 - pr(t, 3450, 3550); by1 = 999; }
+    else if (t < 4800) { pt = H.r2.getPointAtLength(p2 * H.r2._l); o = t < 3650 ? pr(t, 3550, 3650) : 1; by1 = 999; by2 = t >= 3650 ? pt.y : 30; }
+    else { pt = null; by1 = by2 = 999; }
+    var cx, cy;
+    if (pt) { var m = heroMap(pt.x, pt.y); cx = m[0]; cy = m[1]; }
+    else { var q2 = dockPath.getPointAtLength(pd * dockPath._l); cx = q2.x; cy = q2.y; rad = lerp(7 * L.hk.k, L.r, pd); }
+    H.l1.forEach(function (e, i) { op(e, by1 >= +e.getAttribute('data-y') - 1 ? 1 : 0.56); });
+    H.d1.forEach(function (e) { op(e, by1 >= +e.getAttribute('cy') - 1 ? 1 : 0.4); });
+    H.l2.forEach(function (e) { var on = by2 >= +e.getAttribute('data-y') - 1; op(e, on ? 1 : 0.56); cls(e, 'pend', !on); });
+    H.d2.forEach(function (e) { op(e, by2 >= +e.getAttribute('cy') - 1 ? 1 : 0.4); });
+    drw(H.x, pr(t, 2300, 2500));
+    drw(H.n, pr(t, 2500, 2700)); op(H.rec, pr(t, 2550, 2750));
+    drw(H.res, WM.easeInOut(pr(t, 2750, 3450)));
+    op(H.chk, by2 >= 149 ? 1 : 0);
+    drw(H.ok, pr(t, 4300, 4500));
+    op(H.cap1, pr(t, 4400, 4800)); op(H.cap2, pr(t, 4500, 4900));
+    drw(dockPath, pd);
+    dockBead.setAttribute('cx', f(cx)); dockBead.setAttribute('cy', f(cy)); dockBead.setAttribute('r', f(rad));
+    op(dockBead, o);
+  }
+  function heroPlay() {
+    if (WM.reduced || !L.ready) return;
+    cancelAnimationFrame(H.raf);
+    H.playing = true; H.done = false; H.y0 = window.scrollY;
+    var start = performance.now();
+    (function step(now) {
+      if (!H.playing) return;
+      var t = Math.max(0, now - start);
+      heroAt(Math.min(t, END));
+      if (t < END) H.raf = requestAnimationFrame(step);
+      else { H.playing = false; H.done = true; WM.invalidate(); }
+    })(start);
+    WM.invalidate();
+  }
+  function heroFinish() {
+    cancelAnimationFrame(H.raf);
+    H.playing = false; H.done = true;
+    heroAt(END); WM.invalidate();
+  }
+  var idleT = 0, started = false;
+  function tryStart() {
+    if (started || H.done || H.playing || WM.reduced || !L.ready) return;
+    var r = H.svg.getBoundingClientRect(), vh = window.innerHeight;
+    var vis = (Math.min(r.bottom, vh) - Math.max(r.top, 0)) / r.height;
+    if (vis >= 0.85) { started = true; heroPlay(); }
+  }
+  window.addEventListener('scroll', function () {
+    if (H.playing && Math.abs(window.scrollY - H.y0) > 4) heroFinish();
+    clearTimeout(idleT); idleT = setTimeout(tryStart, 300);
+  }, { passive: true });
+  H.replay.addEventListener('click', function () { started = true; heroPlay(); });
+
+  /* =========================================================================
+     BUILD: measure layout, lay labels on diagrams, draw the thread
+     ========================================================================= */
+  var scenes = [], wks = [], lanesR = [], ghost = null, counter = q('.counter'), laneTops = [];
+  var tb = [doc.getElementById('tb0'), doc.getElementById('tb1'), doc.getElementById('tb2'), doc.getElementById('tb3')];
+  var tbg = doc.getElementById('tbg');
+  var tbCore = q('.b-core', tb[0]), tbRing = q('.b-ring', tb[0]), tbIv = q('.b-iv', tb[0]);
+  var endImg = q('.end-lockup');
+
+  function build() {
+    if (!window.innerWidth || !window.innerHeight || !main.offsetHeight) return;   // hidden iframe: rebuild runs again on the next resize
+    mr = main.getBoundingClientRect();
+    mainTrack.measure();
+    L.mainTop = mainTrack.top;
+    var W = mr.width, Hh = mr.height;
+    loom.setAttribute('viewBox', '0 0 ' + f(W) + ' ' + f(Hh));
+    gFut.textContent = ''; gPast.textContent = ''; gLive.textContent = '';
+    scenes = []; wks = []; lanesR = []; ghost = null; laneTops = [];
+    L.mob = window.innerWidth < 760;
+    L.S = rel(q('.spine-probe')).l;
+    L.r = L.mob ? 7 : 9;
+    L.lead = L.mob ? Math.round(window.innerHeight * 0.3) : 0;   // stacked lanes: labels reveal as the stage enters view
+    var S = L.S;
+
+    /* ---- hero geometry + dock ---- */
+    var hr = rel(q('#top')), sv = rel(H.svg), fg = rel(q('.hero-fig'));
+    L.hk = { l: sv.l, t: sv.t, k: sv.w / 356 };
+    var e2 = heroMap(214, 330), yH = sv.b + 12, rr = 10, d;
+    if (L.mob) {
+      L.dockY = yH;
+      d = 'M' + f(e2[0]) + ' ' + f(e2[1]) + ' V' + f(yH - rr) + ' Q' + f(e2[0]) + ' ' + f(yH) + ' ' + f(e2[0] - rr) + ' ' + f(yH) + ' H' + f(S);
+    } else {
+      var xV = fg.l - 34;
+      L.dockY = hr.b - 44;
+      d = 'M' + f(e2[0]) + ' ' + f(e2[1]) + ' V' + f(yH - rr) + ' Q' + f(e2[0]) + ' ' + f(yH) + ' ' + f(e2[0] - rr) + ' ' + f(yH) +
+        ' H' + f(xV + rr) + ' Q' + f(xV) + ' ' + f(yH) + ' ' + f(xV) + ' ' + f(yH + rr) + ' V' + f(L.dockY - rr) +
+        ' Q' + f(xV) + ' ' + f(L.dockY) + ' ' + f(xV - rr) + ' ' + f(L.dockY) + ' H' + f(S);
+    }
+    mk('path', { d: d, fill: 'none', stroke: 'rgba(247,246,243,.12)', 'stroke-width': 1 }, gFut);
+    dockPath = dash(mk('path', { d: d, fill: 'none', stroke: 'rgba(247,246,243,.72)', 'stroke-width': 1.25, 'stroke-linejoin': 'round' }, gLive));
+    var wkh = q('[data-wk="hero12"]'), wkd = q('[data-wk="dock"]');
+    wkh.style.top = (rel(q('.hero-text')).t - hr.t + 6) + 'px';
+    wkd.style.top = (L.dockY - hr.t + (L.mob ? 46 : 0)) + 'px';
+
+    /* ---- the thread ---- */
+    var R = new Route(S, L.dockY);
+    L.route = R;
+    buildProblem(R);
+    buildContract(R);
+    buildQuestions(R);
+    buildRepeated(R);
+    buildEnd(R);
+    L.endY = R.y;
+    /* the page ends right under the wordmark, so over the last stretch of scroll the bead's
+       viewport anchor eases from AV down to wherever the mark sits at full scroll */
+    var vh0 = window.innerHeight, maxS = Math.max(0, doc.documentElement.scrollHeight - vh0);
+    L.endA = L.endY + L.mainTop - maxS + 1;
+    /* the end beat can never reach the top of the viewport: its scroll-margin is set to where it sits at full
+       scroll (so it registers as active only there) and its offset makes wm:goto land at the very bottom;
+       accumulate gets a margin only if its own landing would otherwise be clamped to the same position */
+    var endEl = q('#end'), accEl = q('#accumulate'), sy = window.scrollY;
+    var endTop = endEl.getBoundingClientRect().top + sy, accTop = accEl.getBoundingClientRect().top + sy;
+    var endM = Math.max(0, Math.round(endTop - maxS + 12)), accM = Math.max(0, Math.round(accTop - (maxS - 48)));
+    endEl.setAttribute('data-beat-offset', Math.max(0, Math.ceil(maxS - (endTop - endM)) + 2));
+    if (endEl._m !== endM || accEl._m !== accM) {
+      endEl._m = endM; accEl._m = accM;
+      endEl.style.scrollMarginTop = endM + 'px'; accEl.style.scrollMarginTop = accM ? accM + 'px' : '';
+      window.dispatchEvent(new Event('resize'));   // dir.js re-reads beat margins on resize
+    }
+    L.rampE = maxS; L.rampS = maxS - Math.min(vh0 * 0.9, Math.max(1, maxS - L.mainTop - L.dockY));
+
+    var spineEnd = L.endY;
+    mk('line', { x1: S, x2: S, y1: 0, y2: f(spineEnd), stroke: 'rgba(247,246,243,.14)', 'stroke-width': 1 }, gFut);
+    mk('path', { d: R.d, fill: 'none', stroke: 'rgba(247,246,243,.12)', 'stroke-width': 1 }, gFut);
+    var past = mk('path', { d: R.d, fill: 'none', stroke: 'rgba(247,246,243,.78)', 'stroke-width': 1.25 }, gPast);
+    gPast.insertBefore(past, gPast.firstChild);
+    lanesR.forEach(function (lr) {
+      mk('path', { d: lr.d, fill: 'none', stroke: 'rgba(247,246,243,.12)', 'stroke-width': 1 }, gFut);
+      var p = mk('path', { d: lr.d, fill: 'none', stroke: 'rgba(247,246,243,.78)', 'stroke-width': 1.25 }, gPast);
+      gPast.insertBefore(p, gPast.firstChild.nextSibling);
+    });
+
+    dockBead = mk('circle', { r: L.r, fill: 'url(#gBead)', stroke: 'rgba(247,246,243,.34)', 'stroke-width': 1, cx: S, cy: L.dockY }, gLive);
+    markBead = mk('circle', { r: L.mark.br, fill: 'url(#gBead)', cx: f(L.mark.bcx), cy: f(L.mark.bcy) }, gLive);
+
+    qa('.scene .wk').forEach(function (e) { wks.push({ el: e, y: 0 }); });
+    wks.push({ el: wkh, y: -1e9 }, { el: wkd, y: L.dockY - 1 });
+    wks.forEach(function (w) { if (w.y === 0) { var r = rel(w.el); w.y = r.t + r.h / 2; } });
+
+    L.ready = true;
+    if (WM.reduced) renderStatic();
+    else {
+      if (!H.done && !H.playing) {
+        if (window.scrollY + window.innerHeight * AV - L.mainTop > L.dockY + 2) heroFinish();
+        else heroAt(0);
+      } else if (H.done) heroAt(END);
+      WM.invalidate();
+    }
+  }
+
+  /* ---- 1. The problem: the bundle ---------------------------------------- */
+  function buildProblem(R) {
+    var stg = q('.st-problem'), st = rel(stg), S = L.S;
+    var n = 14, k = 3, gap = Math.min(18, (st.w - 96) / 13);
+    var bx0 = st.l + (L.mob ? 30 : 44), xk = bx0 + k * gap;
+    var yA = st.t + 56, yL = yA + 64, yB = st.t + st.h - 118, yP = yL + (yB - yL) * 0.5;
+    var tx = st.l + 12, yT = yB + 46;
+    R.down(yA - Math.max(48, (xk - S) * 0.75)).to(xk, yA).down(yP)
+      .to(tx, yP + Math.max(56, (xk - tx) * 0.9)).down(yT);
+    R.to(S, yT + Math.max(44, (tx - S) * 1.1));
+    var hist = [];
+    for (var i = 0; i < n; i++) {
+      if (i === k) continue;
+      var xi = bx0 + i * gap, yb = yB - ((i * 37) % 5) * 7;
+      hist.push(mk('path', { d: 'M' + f(xk) + ' ' + f(yA) + ' C' + f(xk) + ' ' + f(yA + 21) + ' ' + f(xi) + ' ' + f(yA + 43) + ' ' + f(xi) + ' ' + f(yL) + ' V' + f(yb),
+        fill: 'none', stroke: 'rgba(247,246,243,.34)', 'stroke-width': 1 }));
+    }
+    var pull = mk('path', { d: 'M' + f(xk) + ' ' + f(yP) + ' C' + f(xk) + ' ' + f(yP + 25) + ' ' + f(tx) + ' ' + f(yP + 45) + ' ' + f(tx) + ' ' + f(yP + Math.max(56, (xk - tx) * 0.9)) + ' V' + f(yT),
+      fill: 'none', stroke: '#5c8f8a', 'stroke-width': 1.75 });
+    var inK = mk('path', { d: 'M' + f(xk) + ' ' + f(yA) + ' V' + f(yP), fill: 'none', stroke: '#5c8f8a', 'stroke-width': 1.75 }, gLive);
+    var tick = mk('path', { d: 'M' + f(tx - 7) + ' ' + f(yT) + ' H' + f(tx + 7), stroke: '#f7f6f3', 'stroke-width': 2, 'stroke-linecap': 'round' });
+    var lStored = lb(stg, 'stored'), lDec = lb(stg, 'decision');
+    var lsx = bx0 + 13 * gap + 22, lsw = (lStored && lStored.offsetWidth) || 134;
+    if (!L.mob && lsx + lsw > st.r - 6) place(stg, st, lStored, st.r - 6, yL + 8, 'r');   // narrow figure column: keep the label out of the copy
+    else place(stg, st, lStored, L.mob ? st.r : lsx, L.mob ? yA - 22 : yL + 8, L.mob ? 'r' : 'l');
+    place(stg, st, lDec, tx + 16, yT);
+    scenes.push(function (by) {
+      M.o *= 1 - 0.62 * sp(by, yA + 10, yL) * (1 - sp(by, yP + 20, yP + 60));
+      op(lStored, sp(by, yA - 10, yA + 30));
+      op(lDec, sp(by, yT - 24, yT));
+      op(inK, sp(by, yT - 10, yT + 20));
+      void tick; void hist; void pull;
+    });
+  }
+
+  /* ---- 2. Agent Memory Contracts: the gate ------------------------------- */
+  function buildContract(R) {
+    var stg = q('.st-gate'), st = rel(stg), S = L.S, r = L.r;
+    var k = r / 6.33, pw = 6.108 * k, ph = 52.2 * k, gap = 14.55 * k;
+    var gx = st.l + (L.mob ? 30 : 46), labX = gx + gap / 2 + pw + 30;
+    var rowH = (st.h - 210) / 2, gys = [0, 1, 2].map(function (i) { return st.t + 100 + i * rowH; });
+    var sw = gap / 2 + pw + r + 8, maxW = st.r - labX;
+    var rows = qa('.gate-row', stg);
+    R.down(st.t - Math.max(40, (gx - S) * 0.75)).to(gx, st.t);
+    R.down(gys[1] - 42).to(gx - sw, gys[1] + 8).down(gys[1] + 42).to(gx, gys[1] + 100);
+    R.down(gys[2] - 30).to(gx - sw, gys[2] + 16).down(gys[2] + 46);
+    R.to(S, gys[2] + 46 + Math.max(48, (gx - sw - S) * 1.1));
+    var gates = gys.map(function (gy, i) {
+      var row = rows[i];
+      place(stg, st, q('.t', row), labX, gy - 84, 'lt');
+      place(stg, st, lb(row, 'cand'), labX, gy - 64, 'lt', maxW);
+      if (lb(row, 'dec')) place(stg, st, lb(row, 'dec'), labX, gy);
+      place(stg, st, lb(row, 'out'), labX, i === 0 ? gy + 40 : gy - 8, 'lt', maxW);
+      mk('path', { d: 'M' + f(gx + 4) + ' ' + f(gy - 56) + ' H' + f(labX - 8), stroke: 'rgba(247,246,243,.5)', 'stroke-width': 1, 'stroke-dasharray': '2 3' });
+      var shut = gap / 2 - 1.5;
+      var pl = mk('rect', { x: f(gx - gap / 2 - pw), y: f(gy - ph / 2), width: f(pw), height: f(ph), rx: f(pw / 2), fill: 'url(#gPL)' }, gLive);
+      var prr = mk('rect', { x: f(gx + gap / 2), y: f(gy - ph / 2), width: f(pw), height: f(ph), rx: f(pw / 2), fill: 'url(#gPR)' }, gLive);
+      return { gy: gy, pl: pl, pr: prr, shut: shut, row: row };
+    });
+    var g0 = gys[0], g1 = gys[1], g2 = gys[2];
+    var tickX = gx + gap / 2 + pw + 8;
+    var dtick = dash(mk('path', { d: 'M' + f(tickX) + ' ' + f(g0 - 1) + ' l4 4.5 l9 -10', fill: 'none', stroke: '#f7f6f3', 'stroke-width': 1.6, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, gLive));
+    var deposit = mk('circle', { cx: f(gx), cy: f(g0 + 62), r: f(r * 0.55), fill: '#f7f6f3' }, gLive);
+    var ring = mk('circle', { cx: f(gx), cy: f(g1 - 56), r: f(r * 0.8), fill: '#0a0a0a', stroke: 'rgba(247,246,243,.72)', 'stroke-width': 1.25 }, gLive);
+    var lDec = lb(gates[0].row, 'dec'), out = gates.map(function (g) { return lb(g.row, 'out'); });
+    function setGate(g, open) {
+      var s = g.shut * (1 - open);
+      g.pl.setAttribute('transform', 'translate(' + f(s) + ' 0)');
+      g.pr.setAttribute('transform', 'translate(' + f(-s) + ' 0)');
+    }
+    scenes.push(function (by) {
+      var t = sp(by, g0 - 150, g0 - 110), open = sp(by, g0 - 105, g0 - 40);
+      drw(dtick, t); op(lDec, t);
+      setGate(gates[0], open); setGate(gates[1], 0); setGate(gates[2], 0);
+      op(out[0], sp(by, g0 + 10, g0 + 40));
+      op(deposit, by >= g0 + 62 ? 1 : 0);
+      M.iv = Math.max(M.iv, sp(by, g0 + 4, g0 + 26) * (1 - sp(by, g0 + 62, g0 + 90)));
+      op(ring, by >= g1 - 44 ? 1 : 0);
+      op(out[1], sp(by, g1 - 40, g1 - 10));
+      M.iv = Math.max(M.iv, sp(by, g2 - 170, g2 - 130) * (1 - sp(by, g2 - 20, g2 + 14)));
+      op(out[2], sp(by, g2 - 36, g2 - 6));
+    });
+  }
+
+  /* ---- 3. Four questions: lanes ------------------------------------------ */
+  function buildQuestions(R) {
+    var S = L.S, lanes = qa('.lane');
+    var lr = lanes.map(rel), ms = lanes.map(function (l) { return q('.micro', l); }), mr2 = ms.map(rel);
+    var kinds = [mDecisions, mState, mRevision, mEvaluation];
+    if (!L.mob) {
+      var top = lr[0].t, fanY = top - 190;
+      R.down(fanY);
+      var routes = [R, new Route(S, fanY), new Route(S, fanY), new Route(S, fanY)];
+      var mergeY = Math.max.apply(null, mr2.map(function (m) { return m.b; })) + 6;
+      routes.forEach(function (rt, i) {
+        rt.to(lr[i].l, top).down(mr2[i].t);
+        kinds[i](rt, ms[i], mr2[i], lr[i].l, i < 3 ? lr[i + 1].l - 10 : mr2[i].r);
+        rt.down(mergeY).to(S, mergeY + 200);
+      });
+      lanesR = routes.slice(1);
+      L.lanesRange = [fanY + 1, mergeY + 199];
+    } else {
+      R.down(lr[0].t - 40).to(lr[0].l, lr[0].t);
+      lanes.forEach(function (l, i) {
+        laneTops.push(lr[i].t - 30);
+        R.down(mr2[i].t);
+        kinds[i](R, ms[i], mr2[i], lr[i].l, mr2[i].r);
+      });
+      R.down(R.y + 8).to(S, R.y + 56);
+      L.lanesRange = null;
+    }
+  }
+  /* lay a lane label inside [x, lim) (lim = the next lane's line): drop the secondary words, then wrap,
+     and anchor its top / bottom / middle at y so wrapped lines grow away from the line they name */
+  function fit(st, l, x, y, lim, anchor, short) {
+    var s = l.style;
+    l.classList.remove('short', 'wrap'); s.maxWidth = ''; s.width = ''; s.right = 'auto'; s.left = (x - st.l) + 'px';
+    var avail = Math.floor(Math.max(40, lim - x));
+    if (q('.dim', l) && (short || l.offsetWidth > avail)) l.classList.add('short');
+    if (l.offsetWidth > avail) { l.classList.add('wrap'); s.width = avail + 'px'; }
+    var h = l.offsetHeight;
+    s.top = ((anchor === 't' ? y : anchor === 'b' ? y - h : y - h / 2) - st.t) + 'px';
+    return l.offsetWidth;
+  }
+  function natW(l) { l.classList.remove('short', 'wrap'); l.style.maxWidth = ''; l.style.width = ''; return l.offsetWidth; }
+  function mDecisions(rt, stg, b, lx, lim) {
+    var fy = b.t + 78, bx = lx + 32, mx = lx + 52;
+    rt.down(fy).to(bx, fy + 46).down(b.b - 56).to(lx, b.b - 10).down(b.b);
+    var past = mk('path', { d: 'M' + f(mx - 4) + ' ' + f(b.t + 18) + 'l8 8m0-8l-8 8', stroke: 'rgba(247,246,243,.72)', 'stroke-width': 1.25, 'stroke-linecap': 'round' }, gLive);
+    var act = mk('path', { d: 'M' + f(lx) + ' ' + f(fy) + ' V' + f(fy + 78), stroke: 'rgba(247,246,243,.4)', 'stroke-width': 1, 'stroke-dasharray': '2 3', fill: 'none' }, gLive);
+    var link = dash(mk('path', { d: 'M' + f(mx) + ' ' + f(b.t + 30) + ' C' + f(mx) + ' ' + f(fy + 4) + ' ' + f(bx) + ' ' + f(fy + 8) + ' ' + f(bx) + ' ' + f(fy + 46), fill: 'none', stroke: '#5c8f8a', 'stroke-width': 1.6 }, gLive));
+    fit(b, lb(stg, 'past'), mx + 10, b.t + 14, lim, 't');
+    fit(b, lb(stg, 'act'), lx + 8, fy + 80, bx - 4, 't');
+    fit(b, lb(stg, 'check'), bx + 12, fy + 50, lim, 't');
+    var lAct = lb(stg, 'act'), lChk = lb(stg, 'check');
+    scenes.push(function (by) {
+      var c = sp(by, fy - 50, fy + 8);
+      drw(link, c);
+      op(act, 0.25 + 0.75 * (1 - 0.6 * sp(by, fy + 20, fy + 60)));
+      op(lAct, sp(by + L.lead, fy - 30, fy));
+      op(lChk, sp(by + L.lead, fy + 10, fy + 50));
+      void past;
+    });
+  }
+  function mState(rt, stg, b, lx, lim) {
+    var wl = Math.min(b.w - 40, 170), lens = [wl, wl * 0.62, wl * 0.3], ys = [b.t + 34, b.t + 104, b.t + 174], rates = [0.25, 0.55, 0.85];
+    rt.down(b.b);
+    var short = qa('.lbl', stg).some(function (l) { return natW(l) > lim - lx - 10; });   // one form for the whole lane
+    var marks = ys.map(function (y, i) {
+      var m = dash(mk('path', { d: 'M' + f(lx + 6) + ' ' + f(y) + ' H' + f(lx + 6 + lens[i]), stroke: '#f7f6f3', 'stroke-width': 2, 'stroke-linecap': 'round', fill: 'none' }, gLive));
+      var l = lb(stg, 'm' + i);
+      fit(b, l, lx + 10, y - 5, lim, 'b', short);
+      return { m: m, l: l, y: y, rate: rates[i] };
+    });
+    scenes.push(function (by) {
+      marks.forEach(function (k) {
+        drw(k.m, sp(by, k.y - 8, k.y + 26));
+        var age = pr(by, k.y + 40, k.y + 320), o = Math.max(0.22, 1 - k.rate * age);
+        op(k.m, o); op(k.l, sp(by + L.lead, k.y - 8, k.y + 10));
+      });
+    });
+  }
+  function mRevision(rt, stg, b, lx, lim) {
+    var wl = Math.min(b.w - 40, 170), y1 = b.t + 36, yc = b.t + 104, y2 = b.t + 172;
+    var l1 = lb(stg, 'v1'), lc = lb(stg, 'chg'), l2 = lb(stg, 'v2');
+    /* the "supersedes" arc sits just right of the widest label, never past the next lane's line */
+    var nat = Math.max(natW(l1), natW(lc), natW(l2));
+    var xa = Math.min(Math.max(lx + 6 + wl * 0.8, lx + 10 + nat + 2), lim - 28);
+    rt.down(b.b);
+    var v1 = dash(mk('path', { d: 'M' + f(lx + 6) + ' ' + f(y1) + ' H' + f(xa), stroke: '#f7f6f3', 'stroke-width': 2, 'stroke-linecap': 'round', fill: 'none' }, gLive));
+    var v1h = mk('path', { d: 'M' + f(lx + 6) + ' ' + f(y1) + ' H' + f(xa), stroke: 'rgba(247,246,243,.5)', 'stroke-width': 2, 'stroke-dasharray': '2 3', fill: 'none' }, gLive);
+    mk('path', { d: 'M' + f(lx - 10) + ' ' + f(yc) + ' H' + f(lx + wl + 14), stroke: 'rgba(247,246,243,.56)', 'stroke-width': 1, 'stroke-dasharray': '4 4', fill: 'none' }, gLive);
+    var v2 = dash(mk('path', { d: 'M' + f(lx + 6) + ' ' + f(y2) + ' H' + f(xa), stroke: '#f7f6f3', 'stroke-width': 2, 'stroke-linecap': 'round', fill: 'none' }, gLive));
+    var sup = dash(mk('path', { d: 'M' + f(xa + 8) + ' ' + f(y2) + ' C' + f(xa + 26) + ' ' + f(y2 - 40) + ' ' + f(xa + 26) + ' ' + f(y1 + 40) + ' ' + f(xa + 8) + ' ' + f(y1), stroke: 'rgba(247,246,243,.56)', 'stroke-width': 1, fill: 'none' }, gLive));
+    fit(b, l1, lx + 10, y1 - 5, xa + 4, 'b'); fit(b, lc, lx + 10, yc - 4, xa + 4, 'b'); fit(b, l2, lx + 10, y2 - 5, xa + 4, 'b');
+    scenes.push(function (by) {
+      var stale = sp(by, yc - 4, yc + 18);
+      drw(v1, sp(by, y1 - 8, y1 + 26)); op(v1, 1 - stale); op(v1h, by > y1 ? stale : 0);
+      op(l1, sp(by + L.lead, y1 - 8, y1 + 10) * (1 - 0.2 * stale)); cls(l1, 'stale', stale > 0.5);
+      op(lc, sp(by + L.lead, yc - 24, yc));
+      drw(v2, sp(by, y2 - 8, y2 + 26)); op(l2, sp(by + L.lead, y2 - 8, y2 + 10));
+      drw(sup, sp(by, y2 + 10, y2 + 50));
+    });
+  }
+  function mEvaluation(rt, stg, b, lx, lim) {
+    var gxl = lx + 38, y0 = b.t + 6, y1 = b.t + 142, yo = b.t + 178;
+    var lo = [0, 1, 2].map(function (i) { return lb(stg, 'o' + i); });
+    var gapX = Math.min(104, (b.w - 70) / 2), widest = Math.max.apply(null, lo.map(natW));
+    /* outcomes side by side when the lane is wide enough, otherwise one per row */
+    var stack = gapX < widest + 14 || lx + 10 + 2 * gapX + natW(lo[2]) > lim;
+    if (stack) y1 = b.t + 124;
+    rt.down(b.b);
+    mk('path', { d: 'M' + f(gxl) + ' ' + f(y0) + ' V' + f(y1), stroke: 'rgba(247,246,243,.4)', 'stroke-width': 1, 'stroke-dasharray': '2 3', fill: 'none' }, gLive);
+    ghost = { x: gxl, y0: y0 + 4, y1: y1 };
+    var yA = stack ? b.t + 150 : yo, yZ = stack ? b.t + 198 : yo;
+    var ticks = [0, 1, 2].map(function (i) {
+      var x = stack ? lx + 14 : lx + 14 + i * gapX, y = stack ? yA + i * 24 : yo;
+      var t = dash(mk('path', { d: 'M' + f(x) + ' ' + f(y - 7) + ' V' + f(y + 7), stroke: 'rgba(247,246,243,.72)', 'stroke-width': 1.5, 'stroke-linecap': 'round', fill: 'none' }, gLive));
+      if (stack) fit(b, lo[i], x + 10, y, lim, 'm');
+      else fit(b, lo[i], x - 4, yo + 14, lim, 't');
+      return t;
+    });
+    fit(b, lb(stg, 'fresh'), gxl + 10, y0 + 2, lim, 't');
+    scenes.push(function (by) {
+      var t = sp(by, yA - 30, yZ + 4);
+      ticks.forEach(function (k) { drw(k, t); });
+      var tl = sp(by + L.lead, yA - 30, yZ + 4); lo.forEach(function (l) { op(l, tl); });
+    });
+  }
+
+  /* ---- 4. Repeated work: weekly passes ------------------------------------ */
+  function buildRepeated(R) {
+    var stg = q('.st-passes'), st = rel(stg), S = L.S, mob = L.mob;
+    var n = 8, Hc = 66, xs = [], ys = [], stride, stepY;
+    if (!mob) {
+      stepY = 138; stride = (st.w - 60 - 250) / 7;
+      for (var i = 0; i < n; i++) { xs[i] = st.l + 30 + i * stride; ys[i] = st.t + 40 + i * stepY; }
+    } else {
+      stepY = 96; stride = (st.w - 40) / 4.1;
+      var lgH = q('.legend', stg).getBoundingClientRect().height;
+      for (var j = 0; j < n; j++) { xs[j] = st.l + 18 + (j % 4) * stride; ys[j] = st.t + lgH + 96 + j * stepY + (j >= 4 ? 64 : 0); }
+    }
+    R.down(ys[0] - Math.max(60, (xs[0] - S) * 0.8)).to(xs[0], ys[0]);
+    var dots = [];
+    xs.forEach(function (x, i) {
+      var y = ys[i];
+      if (i > 0) { if (mob && i === 4) R.to(x, y - 34).down(y); else R.to(x, y); }
+      if (i === 0) R.down(y + 22).to(x + 9, y + 31).down(y + 36).to(x, y + 44).down(y + Hc);
+      else R.down(y + Hc);
+      place(stg, st, lb(stg, 'p' + i), x + 7, y - 13);
+      [0, 22, 44].forEach(function (dy, s) {
+        if (i > 0 && s === 1) {
+          if (i === 5) dots.push(mk('circle', { cx: f(x), cy: f(y + dy), r: 3.6, fill: '#0a0a0a', stroke: 'rgba(247,246,243,.8)', 'stroke-width': 1.25 }));
+          else dots.push(mk('circle', { cx: f(x), cy: f(y + dy), r: 3.6, fill: '#5c8f8a' }));
+        } else mk('circle', { cx: f(x), cy: f(y + dy), r: 2.6, fill: '#0a0a0a', stroke: 'rgba(247,246,243,.78)', 'stroke-width': 1.1 });
+      });
+      if (i === 0) mk('path', { d: 'M' + f(x - 4.5) + ' ' + f(y + Hc - 4.5) + 'l9 9m0-9l-9 9', stroke: '#f7f6f3', 'stroke-width': 1.5, 'stroke-linecap': 'round' });
+      else mk('path', { d: 'M' + f(x - 5) + ' ' + f(y + Hc - 1) + 'l3.5 4 7-9', fill: 'none', stroke: '#f7f6f3', 'stroke-width': 1.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
+      if (i === 5) {
+        mk('path', { d: 'M' + f(x - 16) + ' ' + f(y + 22) + ' H' + f(x + 16), stroke: 'rgba(247,246,243,.72)', 'stroke-width': 1, 'stroke-dasharray': '3 3' });
+        var rv = lb(stg, 'revisit');
+        if (rv) rv.classList.add('wrap');
+        place(stg, st, rv, x + 22, y + 22, null, Math.max(90, Math.floor(st.r - (x + 22) - 2)));
+      }
+    });
+    var lg = q('.legend', stg);
+    place(stg, st, lg, st.l, mob ? st.t + 8 : ys[4] + 10, 'lt');
+    var last = n - 1;
+    L.passExit = { x: xs[last], y: ys[last] + Hc };
+    var labels = xs.map(function (x, i) { return { l: lb(stg, 'p' + i), y: ys[i] }; });
+    var lRev = lb(stg, 'revisit'), yRev = ys[5] + 22;
+    scenes.push(function (by) {
+      labels.forEach(function (k) { op(k.l, by >= k.y - 18 ? 1 : 0.8); });
+      op(lRev, sp(by, yRev - 16, yRev + 4));
+    });
+  }
+
+  /* ---- 5 + 6. The column, then the mark ----------------------------------- */
+  function buildEnd(R) {
+    var stg = q('.st-column'), st = rel(stg), S = L.S;
+    var ir = rel(endImg), k = ir.w / 452.429;
+    var mk_ = {
+      pw: 6.108 * k, ph: 52.2 * k, plx: ir.l, prx: ir.l + 20.657 * k, pt: ir.t + 1.944 * k,
+      bcx: ir.l + 13.383 * k, bcy: ir.t + 28.04 * k, br: 6.33 * k, half: 13.385 * k
+    };
+    L.mark = mk_;
+    var cx = mk_.bcx;
+    if (!L.mob) {
+      R.to(cx, Math.max(st.t, R.y + Math.abs(cx - R.x) * 0.6));
+    } else {
+      R.to(S, R.y + Math.max(80, (R.x - S) * 0.6)).down(st.t - 40).to(cx, st.t);
+    }
+    R.down(mk_.bcy);
+    var top = R.seg[R.seg.length - 1].y0 + 20, bot = mk_.pt - 22, ticks = [];
+    for (var y = top; y <= bot; y += 11) {
+      ticks.push({ y: y, e: mk('path', { d: 'M' + f(cx - mk_.half) + ' ' + f(y) + ' H' + f(cx + mk_.half), stroke: '#f7f6f3', 'stroke-width': 1.5 }) });
+    }
+    var n = ticks.length, lab = [ticks[0], ticks[Math.round(n * 0.55)], ticks[n - 1]];
+    var lbs = ['c0', 'c1', 'c2'].map(function (key, i) { var l = lb(stg, key); place(stg, st, l, cx + mk_.half + 14, lab[i].y); return l; });
+    var pl = mk('rect', { x: f(mk_.plx), y: f(mk_.pt), width: f(mk_.pw), height: f(mk_.ph), rx: f(mk_.pw / 2), fill: 'url(#gPL)' }, gLive);
+    var prr = mk('rect', { x: f(mk_.prx), y: f(mk_.pt), width: f(mk_.pw), height: f(mk_.ph), rx: f(mk_.pw / 2), fill: 'url(#gPR)' }, gLive);
+    var toC = cx - (mk_.plx + mk_.pw / 2);
+    scenes.push(function (by) {
+      for (var i = 0; i < n; i++) {
+        var t = ticks[i];
+        if (by >= t.y) op(t.e, (0.3 + 0.62 * i / (n - 1)) * (1 - 0.3 * pr(by - t.y, 0, 300)) + 0.08);
+      }
+      lbs.forEach(function (l, i) { op(l, by >= lab[i].y ? 1 - 0.2 * pr(by - lab[i].y, 0, 420) : 0); });
+      var a = sp(by, mk_.pt - 200, mk_.pt - 120), part = sp(by, mk_.pt - 130, mk_.bcy - 6);
+      op(pl, a); op(prr, a);
+      var s = toC * (1 - part);
+      pl.setAttribute('transform', 'translate(' + f(s) + ' 0)');
+      prr.setAttribute('transform', 'translate(' + f(-s) + ' 0)');
+      M.r = lerp(M.r, mk_.br, sp(by, mk_.pt - 130, mk_.bcy));
+      var rev = sp(by, mk_.bcy - 150, mk_.bcy);
+      endImg.style.clipPath = 'inset(0 ' + f((1 - rev) * 93.4) + '% 0 6.6%)';
+    });
+  }
+
+  /* =========================================================================
+     FRAME: everything is a pure function of the scroll position
+     ========================================================================= */
+  function setClip(by) { var v = f(by); if (recRect._h !== v) { recRect._h = v; recRect.setAttribute('height', v); } }
+  function showTb(e, x, y, o) {
+    if (o <= 0.001) { op(e, 0); return; }
+    e.style.transform = 'translate3d(' + f(x) + 'px,' + f(y) + 'px,0)';
+    op(e, o);
+  }
+  function runScenes(by) {
+    M.o = 1; M.iv = 0; M.r = L.r;
+    for (var i = 0; i < scenes.length; i++) scenes[i](by);
+  }
+  function anchorAt(st) {
+    var a = st.vh * AV;
+    if (L.endA > a && L.rampE > L.rampS) a += (L.endA - a) * smooth(pr(st.y, L.rampS, L.rampE));
+    return a;
+  }
+  function frame(st) {
+    if (!L.ready || WM.reduced) return;
+    var ay = anchorAt(st);
+    var raw = st.y + ay - L.mainTop;
+    if (!H.done && !H.playing && raw > L.dockY + 2) heroFinish();
+    var by = clamp(raw, L.dockY, L.endY);
+    setClip(by);
+    runScenes(by);
+    for (var w = 0; w < wks.length; w++) cls(wks[w].el, 'on', by >= wks[w].y);
+    var riding = H.done && raw > L.dockY && raw < L.endY;
+    if (riding) {
+      var rr = M.r;
+      tbCore.setAttribute('r', f(rr)); tbIv.setAttribute('r', f(rr)); tbRing.setAttribute('r', f(rr + 1));
+      op(tbIv, M.iv);
+      showTb(tb[0], L.route.at(by), ay, M.o);
+    } else op(tb[0], 0);
+    if (H.done) {
+      op(dockBead, raw <= L.dockY ? 1 : 0);
+      dockBead.setAttribute('cx', f(L.S)); dockBead.setAttribute('cy', f(L.dockY)); dockBead.setAttribute('r', f(L.r));
+    }
+    op(markBead, raw >= L.endY ? 1 : 0);
+    var lanesOn = L.lanesRange && riding && by > L.lanesRange[0] && by < L.lanesRange[1];
+    for (var i = 0; i < 3; i++) {
+      if (lanesOn) showTb(tb[i + 1], lanesR[i].at(by), ay, 1);
+      else op(tb[i + 1], 0);
+    }
+    if (ghost && riding && by > ghost.y0 && by < ghost.y1 + 14) showTb(tbg, ghost.x, ay, sp(by, ghost.y0, ghost.y0 + 20) * (1 - sp(by, ghost.y1 - 6, ghost.y1 + 14)));
+    else op(tbg, 0);
+    if (L.mob && laneTops.length) {
+      var idx = 0; for (var j = 0; j < laneTops.length; j++) if (by >= laneTops[j]) idx = j;
+      var txt = '0' + (idx + 1) + ' / 04'; if (counter.textContent !== txt) counter.textContent = txt;
+    }
+  }
+  function renderStatic() {
+    cancelAnimationFrame(H.raf); H.playing = false; H.done = true;
+    heroAt(END);
+    setClip(1e7);
+    runScenes(1e7);
+    wks.forEach(function (w) { cls(w.el, 'on', true); });
+    tb.concat([tbg]).forEach(function (e) { op(e, 0); });
+    op(dockBead, 1); dockBead.setAttribute('cx', f(L.S)); dockBead.setAttribute('cy', f(L.dockY)); dockBead.setAttribute('r', f(L.r));
+    op(markBead, 1);
+    if (counter) counter.textContent = '01 / 04';
+  }
+
+  WM.frame(frame);
+  var bt = 0;
+  function rebuild() { cancelAnimationFrame(bt); bt = requestAnimationFrame(function () { build(); if (!WM.reduced) frame({ y: window.scrollY, vh: window.innerHeight }); }); }
+  var lastW = window.innerWidth, lastH = 0;
+  window.addEventListener('resize', function () {
+    if (window.innerWidth !== lastW || Math.abs(window.innerHeight - lastH) > 120) { lastW = window.innerWidth; lastH = window.innerHeight; rebuild(); }
+  });
+  lastH = window.innerHeight;
+  if (window.ResizeObserver) {
+    var lastMH = 0;
+    new ResizeObserver(function () { var h = main.offsetHeight; if (Math.abs(h - lastMH) > 1) { lastMH = h; rebuild(); } }).observe(main);
+  }
+  WM.onReduced(function (r) {
+    if (!L.ready) return;
+    if (r) renderStatic();
+    else { H.done = true; heroAt(END); WM.invalidate(); }
+  });
+  build();
+  if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(rebuild);
+  window.addEventListener('load', function () { rebuild(); setTimeout(tryStart, 400); });
+})();
+</script>
+</body>
+</html>
